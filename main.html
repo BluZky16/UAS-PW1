@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tone.js for audio notification -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+    <style>
+        /* Custom styles using Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
+        }
+        /* Style for the active mode button */
+        .btn-mode.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body id="app-body" class="bg-gray-900 flex items-center justify-center min-h-screen transition-colors duration-500">
+
+    <div class="w-full max-w-md mx-4">
+        <div class="bg-white/10 backdrop-blur-xl p-6 sm:p-8 rounded-2xl shadow-2xl text-white">
+            
+            <!-- Mode Selection Buttons -->
+            <div class="flex justify-center space-x-2 sm:space-x-4 mb-8">
+                <button id="pomodoro-btn" class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Pomodoro</button>
+                <button id="short-break-btn" class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat Pendek</button>
+                <button id="long-break-btn" class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat Panjang</button>
+            </div>
+
+            <!-- Timer Display -->
+            <div class="text-center my-8">
+                <h1 id="timer-display" class="text-7xl sm:text-8xl md:text-9xl font-black tracking-tighter">25:00</h1>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="flex flex-col space-y-4">
+                <button id="start-pause-btn" class="w-full py-4 text-2xl font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95">
+                    MULAI
+                </button>
+                <button id="reset-btn" class="w-full py-2 text-md font-semibold rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300 active:scale-95">
+                    Atur Ulang
+                </button>
+            </div>
+            
+            <!-- Cycle Counter -->
+            <div class="text-center mt-8">
+                <p class="text-sm text-white/50">Sesi Selesai: <span id="cycle-count">0</span>/4</p>
+            </div>
+        </div>
+        <footer class="text-center mt-4 text-white/40 text-sm">
+            Dibuat dengan ❤️ oleh Senior Programmer
+        </footer>
+    </div>
+
+    <script>
+        // --- DOM Element References ---
+        const timerDisplay = document.getElementById('timer-display');
+        const startPauseBtn = document.getElementById('start-pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const pomodoroBtn = document.getElementById('pomodoro-btn');
+        const shortBreakBtn = document.getElementById('short-break-btn');
+        const longBreakBtn = document.getElementById('long-break-btn');
+        const cycleCountDisplay = document.getElementById('cycle-count');
+        const appBody = document.getElementById('app-body');
+
+        // --- Timer Settings (in seconds) ---
+        const POMODORO_TIME = 25 * 60;
+        const SHORT_BREAK_TIME = 5 * 60;
+        const LONG_BREAK_TIME = 15 * 60;
+        const CYCLES_BEFORE_LONG_BREAK = 4;
+
+        // --- State Variables ---
+        let timerId = null;
+        let timeLeft = POMODORO_TIME;
+        let currentMode = 'pomodoro'; // 'pomodoro', 'shortBreak', 'longBreak'
+        let isPaused = true;
+        let cyclesCompleted = 0;
+
+        // --- Audio Notification ---
+        // Create a simple synth sound with Tone.js
+        const synth = new Tone.Synth().toDestination();
+        function playNotificationSound() {
+            // Ensure audio context is started by user interaction
+            if (Tone.context.state !== 'running') {
+                Tone.start();
+            }
+            synth.triggerAttackRelease("C5", "8n", Tone.now());
+        }
+
+        // --- Core Functions ---
+
+        /**
+         * Updates the timer display on the screen and in the document title.
+         */
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            timerDisplay.textContent = formattedTime;
+            document.title = `${formattedTime} - ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)} Timer`;
+        }
+
+        /**
+         * Switches the application mode and updates the UI accordingly.
+         * @param {string} mode - The mode to switch to ('pomodoro', 'shortBreak', 'longBreak').
+         */
+        function switchMode(mode) {
+            currentMode = mode;
+            isPaused = true;
+            clearInterval(timerId);
+            timerId = null;
+
+            // Update timeLeft based on the new mode
+            switch (mode) {
+                case 'pomodoro':
+                    timeLeft = POMODORO_TIME;
+                    break;
+                case 'shortBreak':
+                    timeLeft = SHORT_BREAK_TIME;
+                    break;
+                case 'longBreak':
+                    timeLeft = LONG_BREAK_TIME;
+                    break;
+            }
+            
+            updateUIForMode();
+            updateTimerDisplay();
+        }
+
+        /**
+         * Updates the visual elements (colors, buttons) based on the current mode.
+         */
+        function updateUIForMode() {
+            // Reset all mode buttons
+            [pomodoroBtn, shortBreakBtn, longBreakBtn].forEach(btn => {
+                btn.classList.remove('active', 'bg-red-500', 'bg-blue-500', 'bg-green-500', 'text-white');
+            });
+            
+            startPauseBtn.textContent = 'MULAI';
+
+            let bgColor, activeBtn, activeBtnColor, startBtnColor;
+
+            if (currentMode === 'pomodoro') {
+                bgColor = 'bg-gray-900';
+                activeBtn = pomodoroBtn;
+                activeBtnColor = 'bg-red-500';
+                startBtnColor = 'bg-white text-red-500';
+            } else if (currentMode === 'shortBreak') {
+                bgColor = 'bg-blue-900';
+                activeBtn = shortBreakBtn;
+                activeBtnColor = 'bg-blue-500';
+                startBtnColor = 'bg-white text-blue-500';
+            } else { // longBreak
+                bgColor = 'bg-green-900';
+                activeBtn = longBreakBtn;
+                activeBtnColor = 'bg-green-500';
+                startBtnColor = 'bg-white text-green-500';
+            }
+
+            // Update body background
+            appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 ${bgColor}`;
+            
+            // Highlight the active mode button
+            activeBtn.classList.add('active', activeBtnColor, 'text-white');
+            
+            // Update start button color
+            startPauseBtn.className = `w-full py-4 text-2xl font-bold rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95 ${startBtnColor}`;
+        }
+        
+        /**
+         * Handles the automatic transition to the next state after a timer completes.
+         */
+        function handleTimerCompletion() {
+            playNotificationSound();
+            
+            if (currentMode === 'pomodoro') {
+                cyclesCompleted++;
+                cycleCountDisplay.textContent = `${cyclesCompleted % CYCLES_BEFORE_LONG_BREAK}/${CYCLES_BEFORE_LONG_BREAK}`;
+                if (cyclesCompleted > 0 && cyclesCompleted % CYCLES_BEFORE_LONG_BREAK === 0) {
+                    switchMode('longBreak');
+                } else {
+                    switchMode('shortBreak');
+                }
+            } else { // After a break
+                switchMode('pomodoro');
+            }
+        }
+
+        /**
+         * Starts the timer countdown.
+         */
+        function startTimer() {
+            if (timerId !== null) return; // Prevent multiple intervals
+
+            isPaused = false;
+            startPauseBtn.textContent = 'JEDA';
+            
+            timerId = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft < 0) {
+                    clearInterval(timerId);
+                    timerId = null;
+                    handleTimerCompletion();
+                }
+            }, 1000);
+        }
+
+        /**
+         * Pauses the timer countdown.
+         */
+        function pauseTimer() {
+            isPaused = true;
+            startPauseBtn.textContent = 'LANJUTKAN';
+            clearInterval(timerId);
+            timerId = null;
+        }
+        
+        /**
+         * Resets the timer to its initial state for the current mode.
+         */
+        function resetTimer() {
+            switchMode(currentMode); // This effectively resets everything
+        }
+
+        // --- Event Listeners ---
+        startPauseBtn.addEventListener('click', () => {
+            // Start Tone.js context on first user interaction
+            if (Tone.context.state !== 'running') {
+                Tone.start();
+            }
+          
+            if (isPaused) {
+                startTimer();
+            } else {
+                pauseTimer();
+            }
+        });
+
+        resetBtn.addEventListener('click', resetTimer);
+
+        pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
+        shortBreakBtn.addEventListener('click', () => switchMode('shortBreak'));
+        longBreakBtn.addEventListener('click', () => switchMode('longBreak'));
+
+        // --- Initial Setup ---
+        window.addEventListener('load', () => {
+            switchMode('pomodoro'); // Initialize the app in Pomodoro mode
+        });
+
+    </script>
+</body>
+</html>

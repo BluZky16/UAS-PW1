@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Timer</title>
-    
+
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    
+
     <!-- Tone.js for audio notification -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
 
@@ -20,29 +21,80 @@
         /* Custom styles using Inter font */
         body {
             font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
+            -webkit-tap-highlight-color: transparent;
+            /* Disable tap highlight on mobile */
         }
+
         /* Style for the active mode button */
         .btn-mode.active {
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
+
 <body id="app-body" class="flex items-center justify-center min-h-screen transition-colors duration-500">
     <!-- background image -->
-    <div id="bg-wrapper" class="fixed inset-0 -z-10 overflow-hidden">
-        <img id="bg-image"  src="https://studywithme.io/aesthetic-pomodoro-timer/b4b9101e8cdbad99d7b0.jpg" class="w-full h-full object-cover transition-all duration-500" alt="Background Image">
+    <div class="relative">
+        <div role="dialog" aria-modal="true" aria-labelledby="dialog-title" class="relative z-10">
+            <div aria-hidden="true" class="fixed inset-0 bg-black/75 transition-opacity"></div>
+
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                    <div
+                        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div class="sm:flex sm:items-start">
+                                <div
+                                    class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                        data-slot="icon" aria-hidden="true" class="size-6 text-red-600">
+                                        <path
+                                            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                    <h3 id="dialog-title" class="text-base font-semibold text-gray-900">
+                                        Deactivate account</h3>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-500">Are you sure you want to deactivate
+                                            your account? All of your data will be permanently removed. This
+                                            action cannot be undone.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                            <button type="button"
+                                class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">Deactivate</button>
+                            <button type="button"
+                                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
+    <div id="bg-wrapper" class="fixed inset-0 -z-10 overflow-hidden">
+        <img id="bg-image" src="https://studywithme.io/aesthetic-pomodoro-timer/b4b9101e8cdbad99d7b0.jpg"
+            class="w-full h-full object-cover transition-all duration-500" alt="Background Image">
+    </div>
+
     <div class="w-full max-w-md mx-8 bg-black/10 backdrop-blur-[3px] rounded-3xl shadow-xl">
         <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
-            
+
             <!-- Mode Selection Buttons -->
             <div class="flex justify-center space-x-2 sm:space-x-4 mb-8">
-                <button id="pomodoro-btn" class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Pomodoro</button>
-                <button id="short-break-btn" class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat Pendek</button>
-                <button id="long-break-btn" class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat Panjang</button>
+                <button id="pomodoro-btn"
+                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Pomodoro</button>
+                <button id="short-break-btn"
+                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat
+                    Pendek</button>
+                <button id="long-break-btn"
+                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat
+                    Panjang</button>
             </div>
 
             <div class="flex justify-center">
@@ -60,18 +112,23 @@
             <!-- Control Buttons -->
             <div class="flex justify-center gap-4">
                 <button id="start-pause-btn" class="p-2 font-bold rounded-lg transition-all w-fit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                      </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path
+                            d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
+                    </svg>
                 </button>
-                <button id="reset-btn" class="p-2 w-fit  font-semibold rounded-lg bg-white/20 hover:bg-white/20 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z"/>
-                        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466"/>
-                      </svg>
+                <button id="reset-btn"
+                    class="p-2 w-fit  font-semibold rounded-lg bg-white/20 hover:bg-white/20 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
+                        <path
+                            d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466" />
+                    </svg>
                 </button>
             </div>
-            
+
             <!-- Cycle Counter -->
             <div class="text-center mt-8">
                 <p class="text-sm text-white/50">Sesi Selesai: <span id="cycle-count">0</span>/4</p>
@@ -79,237 +136,290 @@
         </div>
         <footer class="text-center mt-4 text-white/40 text-sm">
             Dibuat dengan ❤️ oleh FocusU
+
+
+            <button id="dialogBtn"
+                class="rounded-md bg-gray-950/5 px-2.5 py-1.5 text-sm font-semibold text-gray-900 hover:bg-gray-950/10">Open
+                dialog</button>
         </footer>
     </div>
 
     <script>
         // --- DOM Element References ---
-        const timerDisplay = document.getElementById('timer-display');
-        const startPauseBtn = document.getElementById('start-pause-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const pomodoroBtn = document.getElementById('pomodoro-btn');
-        const shortBreakBtn = document.getElementById('short-break-btn');
-        const longBreakBtn = document.getElementById('long-break-btn');
-        const cycleCountDisplay = document.getElementById('cycle-count');
-        const appBody = document.getElementById('app-body');
-        const gifVideo = document.getElementById('gif');
-
-
-        // --- Timer Settings (in seconds) ---
-        const POMODORO_TIME = 25 * 60;
-        const SHORT_BREAK_TIME = 5 * 60;
-        const LONG_BREAK_TIME = 15 * 60;
-        const CYCLES_BEFORE_LONG_BREAK = 4;
-
-        // --- State Variables ---
-        let timerId = null;
-        let timeLeft = POMODORO_TIME;
-        let currentMode = 'pomodoro'; // 'pomodoro', 'shortBreak', 'longBreak'
-        let isPaused = true;
-        let cyclesCompleted = 0;
-
-        // --- Audio Notification ---
-        // Create a simple synth sound with Tone.js
-        const synth = new Tone.Synth().toDestination();
-        function playNotificationSound() {
-            // Ensure audio context is started by user interaction
-            if (Tone.context.state !== 'running') {
-                Tone.start();
+        document.addEventListener('DOMContentLoaded', function () {
+            const pomodoroSettings = {
+                pomodoroTime: 25 * 60,
+                shortBreakTime: 5 * 60,
+                longBreakTime: 15 * 60,
+                cyclesBeforeLongBreak: 4,
             }
-            synth.triggerAttackRelease("C5", "8n", Tone.now());
-        }
-
-        // --- Core Functions ---
-
-        /**
-         * Updates the timer display on the screen and in the document title.
-         */
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-            timerDisplay.textContent = formattedTime;
-            document.title = `${formattedTime} - ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)} Timer`;
-        }
-
-        /**
-         * Switches the application mode and updates the UI accordingly.
-         * @param {string} mode - The mode to switch to ('pomodoro', 'shortBreak', 'longBreak').
-         */
-        function switchMode(mode) {
-            currentMode = mode;
-            isPaused = true;
-            clearInterval(timerId);
-            timerId = null;
-
-            // Update timeLeft based on the new mode
-            switch (mode) {
-                case 'pomodoro':
-                    timeLeft = POMODORO_TIME;
-                    break;
-                case 'shortBreak':
-                    timeLeft = SHORT_BREAK_TIME;
-                    break;
-                case 'longBreak':
-                    timeLeft = LONG_BREAK_TIME;
-                    break;
-            }
-            
-            updateUIForMode();
-            updateTimerDisplay();
-        }
-
-        /**
-         * Updates the visual elements (colors, buttons) based on the current mode.
-         */
-         function updateUIForMode() {
-            // Reset all mode buttons
-            [pomodoroBtn, shortBreakBtn, longBreakBtn].forEach(btn => {
-                btn.classList.remove('active', 'bg-red-500', 'bg-blue-500', 'bg-green-500', 'text-white');
-            });
-            
-            gifVideo.pause();
-
-
-            startPauseBtn.innerHTML = 
-            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-            </svg>`;
-
-            let bgColor, activeBtn, activeBtnColor, startBtnColor;
-
-            if (currentMode === 'pomodoro') {
-                bgColor = 'bg-gray-900';
-                activeBtn = pomodoroBtn;
-                activeBtnColor = 'bg-red-500';
-                startBtnColor = 'bg-white text-red-500';
-            } else if (currentMode === 'shortBreak') {
-                gifVideo.setAttribute('src','./public/assets/images/crunch.webm' )
-
-                bgColor = 'bg-blue-900';
-                activeBtn = shortBreakBtn;
-                activeBtnColor = 'bg-blue-500';
-                startBtnColor = 'bg-white text-blue-500';
-            } else { // longBreak
-                gifVideo.setAttribute('src','./public/assets/images/mimir.webm' )
-                bgColor = 'bg-green-900';
-                activeBtn = longBreakBtn;
-                activeBtnColor = 'bg-green-500';
-                startBtnColor = 'bg-white text-green-500';
+            const pomodoroProgress = {
+                pomodoro: 0,
+                shortBreak: 0,
+                longBreak: 0,
+                finishedCycles: 0,
             }
 
-            // Update body background
-            appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 ${bgColor}`;
-            
-            // Highlight the active mode button
-            activeBtn.classList.add('active', 'text-white', activeBtnColor);
 
-            
-            // Update start button color
-            startPauseBtn.className = `p-2 font-bold rounded-lg transition-all bg-white ${startBtnColor}`;
-        }
-        
-        /**
-         * Handles the automatic transition to the next state after a timer completes.
-         */
-        function handleTimerCompletion() {
-            playNotificationSound();
-            
-            if (currentMode === 'pomodoro') {
-                cyclesCompleted++;
-                cycleCountDisplay.textContent = `${cyclesCompleted % CYCLES_BEFORE_LONG_BREAK}/${CYCLES_BEFORE_LONG_BREAK}`;
-                if (cyclesCompleted > 0 && cyclesCompleted % CYCLES_BEFORE_LONG_BREAK === 0) {
-                    switchMode('longBreak');
-                } else {
-                    switchMode('shortBreak');
+            const timerDisplay = document.getElementById('timer-display');
+            const startPauseBtn = document.getElementById('start-pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const pomodoroBtn = document.getElementById('pomodoro-btn');
+            const shortBreakBtn = document.getElementById('short-break-btn');
+            const longBreakBtn = document.getElementById('long-break-btn');
+            const cycleCountDisplay = document.getElementById('cycle-count');
+            const appBody = document.getElementById('app-body');
+            const gifVideo = document.getElementById('gif');
+
+
+            // --- Timer Settings (in seconds) ---
+            const POMODORO_TIME = 25 * 60;
+            const SHORT_BREAK_TIME = 5 * 60;
+            const LONG_BREAK_TIME = 15 * 60;
+            const CYCLES_BEFORE_LONG_BREAK = 4;
+
+            // --- State Variables ---
+            let timerId = null;
+            let timeLeft = POMODORO_TIME;
+            let currentMode = 'pomodoro'; // 'pomodoro', 'shortBreak', 'longBreak'
+            let isPaused = true;
+            let cyclesCompleted = 0;
+
+            // --- Audio Notification ---
+            // Create a simple synth sound with Tone.js
+            const synth = new Tone.Synth().toDestination();
+            function playNotificationSound() {
+                // Ensure audio context is started by user interaction
+                if (Tone.context.state !== 'running') {
+                    Tone.start();
                 }
-            } else { // After a break
-                switchMode('pomodoro');
+                synth.triggerAttackRelease("C5", "8n", Tone.now());
             }
-        }
 
-        /**
-         * Starts the timer countdown.
-         */
-        function startTimer() {
-            if (timerId !== null) return; // Prevent multiple intervals
+            // --- Core Functions ---
 
-            isPaused = false;
+            /**
+             * Updates the timer display on the screen and in the document title.
+             */
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
-            gifVideo.play();
+                timerDisplay.textContent = formattedTime;
+                document.title = `${formattedTime} - ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)} Timer`;
+            }
 
+            /**
+             * Switches the application mode and updates the UI accordingly.
+             * @param {string} mode - The mode to switch to ('pomodoro', 'shortBreak', 'longBreak').
+             */
+            function switchMode(mode) {
+                currentMode = mode;
+                isPaused = true;
+                clearInterval(timerId);
+                timerId = null;
 
-            // PAUSE ICON
-            startPauseBtn.innerHTML = 
-            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
-            <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
-            </svg>`;
+                // Update timeLeft based on the new mode
+                switch (mode) {
+                    case 'pomodoro':
+                        timeLeft = POMODORO_TIME;
+                        break;
+                    case 'shortBreak':
+                        timeLeft = SHORT_BREAK_TIME;
+                        break;
+                    case 'longBreak':
+                        timeLeft = LONG_BREAK_TIME;
+                        break;
+                }
 
-            
-            
-            timerId = setInterval(() => {
-                timeLeft--;
+                updateUIForMode();
                 updateTimerDisplay();
+            }
 
-                if (timeLeft < 0) {
-                    clearInterval(timerId);
-                    timerId = null;
-                    handleTimerCompletion();
-                }
-            }, 1000);
-        }
+            /**
+             * Updates the visual elements (colors, buttons) based on the current mode.
+             */
+            function updateUIForMode() {
+                // Reset all mode buttons
+                [pomodoroBtn, shortBreakBtn, longBreakBtn].forEach(btn => {
+                    btn.classList.remove('active', 'bg-red-500', 'bg-blue-500', 'bg-green-500', 'text-white');
+                });
 
-        /**
-         * Pauses the timer countdown.
-         */
-         function pauseTimer() {
-            isPaused = true;
+                gifVideo.pause();
 
-            gifVideo.pause();
 
-            // PLAY ICON
-            startPauseBtn.innerHTML = 
-            `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
                 <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
             </svg>`;
-            // startPauseBtn.textContent = 'LANJUTKAN';
-            clearInterval(timerId);
-            timerId = null;
-        }
-        
-        /**
-         * Resets the timer to its initial state for the current mode.
-         */
-        function resetTimer() {
-            switchMode(currentMode); // This effectively resets everything
-        }
 
-        // --- Event Listeners ---
-        startPauseBtn.addEventListener('click', () => {
-            // Start Tone.js context on first user interaction
-            if (Tone.context.state !== 'running') {
-                Tone.start();
+                let bgColor, activeBtn, activeBtnColor, startBtnColor;
+
+                if (currentMode === 'pomodoro') {
+                    gifVideo.setAttribute('src', './public/assets/images/oiiaoiia.webm')
+                    bgColor = 'bg-gray-900';
+                    activeBtn = pomodoroBtn;
+                    activeBtnColor = 'bg-red-500';
+                    startBtnColor = 'bg-white text-red-500';
+                } else if (currentMode === 'shortBreak') {
+                    gifVideo.setAttribute('src', './public/assets/images/crunch.webm')
+                    bgColor = 'bg-blue-900';
+                    activeBtn = shortBreakBtn;
+                    activeBtnColor = 'bg-blue-500';
+                    startBtnColor = 'bg-white text-blue-500';
+                } else { // longBreak
+                    gifVideo.setAttribute('src', './public/assets/images/mimir.webm')
+                    bgColor = 'bg-green-900';
+                    activeBtn = longBreakBtn;
+                    activeBtnColor = 'bg-green-500';
+                    startBtnColor = 'bg-white text-green-500';
+                }
+
+                // Update body background
+                appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 ${bgColor}`;
+
+                // Highlight the active mode button
+                activeBtn.classList.add('active', 'text-white', activeBtnColor);
+
+
+                // Update start button color
+                startPauseBtn.className = `p-2 font-bold rounded-lg transition-all bg-white ${startBtnColor}`;
             }
-          
-            if (isPaused) {
-                startTimer();
-            } else {
-                pauseTimer();
+
+            /**
+             * Handles the automatic transition to the next state after a timer completes.
+             */
+            function handleTimerCompletion() {
+                playNotificationSound();
+
+                if (currentMode === 'pomodoro') {
+                    cyclesCompleted++;
+                    cycleCountDisplay.textContent = `${cyclesCompleted % CYCLES_BEFORE_LONG_BREAK}/${CYCLES_BEFORE_LONG_BREAK}`;
+                    if (cyclesCompleted > 0 && cyclesCompleted % CYCLES_BEFORE_LONG_BREAK === 0) {
+                        switchMode('longBreak');
+                    } else {
+                        switchMode('shortBreak');
+                    }
+                } else { // After a break
+                    switchMode('pomodoro');
+                }
             }
-        });
 
-        resetBtn.addEventListener('click', resetTimer);
+            /**
+             * Starts the timer countdown.
+             */
+            function startTimer() {
+                if (timerId !== null) return; // Prevent multiple intervals
 
-        pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
-        shortBreakBtn.addEventListener('click', () => switchMode('shortBreak'));
-        longBreakBtn.addEventListener('click', () => switchMode('longBreak'));
+                isPaused = false;
 
-        // --- Initial Setup ---
-        window.addEventListener('load', () => {
-            switchMode('pomodoro'); // Initialize the app in Pomodoro mode
-        });
+                gifVideo.play();
+
+
+                // PAUSE ICON
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                    <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                    </svg>`;
+
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+
+                    if (timeLeft < 0) {
+                        clearInterval(timerId);
+                        timerId = null;
+                        handleTimerCompletion();
+                    }
+                }, 1000);
+            }
+
+            /**
+             * Pauses the timer countdown.
+             */
+            function pauseTimer() {
+                isPaused = true;
+
+                gifVideo.pause();
+
+                // PLAY ICON
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+            </svg>`;
+                // startPauseBtn.textContent = 'LANJUTKAN';
+                clearInterval(timerId);
+                timerId = null;
+            }
+
+            /**
+             * Resets the timer to its initial state for the current mode.
+             */
+            function resetTimer() {
+                switchMode(currentMode); // This effectively resets everything
+            }
+
+            // --- Event Listeners ---
+            startPauseBtn.addEventListener('click', () => {
+                // Start Tone.js context on first user interaction
+                if (Tone.context.state !== 'running') {
+                    Tone.start();
+                }
+
+                if (isPaused) {
+                    startTimer();
+                } else {
+                    pauseTimer();
+                }
+            });
+
+            resetBtn.addEventListener('click', resetTimer);
+
+            pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
+            shortBreakBtn.addEventListener('click', () => switchMode('shortBreak'));
+            longBreakBtn.addEventListener('click', () => switchMode('longBreak'));
+
+            // --- Initial Setup ---
+            window.addEventListener('load', () => {
+                switchMode('pomodoro'); // Initialize the app in Pomodoro mode
+            });
+
+            const openBtn = document.getElementById('dialogBtn');
+            const dialog = document.querySelector('[role="dialog"]');
+            const backdrop = dialog.querySelector('[aria-hidden]');
+
+            // Hide modal initially
+            const panel = dialog.querySelector('.transform');
+
+            // Hide modal initially
+            dialog.classList.add('pointer-events-none', 'opacity-0');
+            backdrop.classList.add('opacity-0');
+            panel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+
+            openBtn.addEventListener('click', () => {
+                dialog.classList.remove('pointer-events-none', 'opacity-0');
+                backdrop.classList.remove('opacity-0');
+                panel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            });
+
+            function closeModal() {
+                dialog.classList.add('pointer-events-none', 'opacity-0');
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            dialog.querySelector('button.text-white').addEventListener('click', () => {
+                closeModal();
+                alert('Account deactivated!');
+            });
+
+            dialog.querySelector('button.text-gray-900').addEventListener('click', closeModal);
+            backdrop.addEventListener('click', closeModal);
+
+        })
 
     </script>
 </body>
+
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,16 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+  <!-- SwiperJS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
     }
     :root {
       --ungu: #5a39a7;
@@ -23,37 +30,55 @@
   
 </head>
 
-
-
 <body class="bg-[#fefefe] text-gray-800">
 
   <!-- Header / Hero Section -->
-  <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-gradient-to-b from-[#cfd5fc] to-white" data-aos="fade-up">
-    <h1 class="text-4xl sm:text-5xl font-bold text-[#5a39a7] mb-4">FocusU</h1>
-    <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Selamat datang di FocusU</h2>
-    <p class="max-w-2xl mb-6 text-gray-600">FocusU adalah website edukasi yang membantu kamu tetap fokus saat belajar menggunakan teknik Pomodoro.</p>
+
+  <section class="pt-28 pb-8 min-h-screen flex flex-col justify-center items-center text-center px-4 bg-gradient-to-b from-[#cfd5fc] to-white" data-aos="fade-up">
+    <div class="flex items-center space-x-2 mb-4">
+      <img src="public/assets/images/LogoFocusUBaru.png" alt="Logo FocusU" class="w-24 h-24 mr-2">
+      <h1 class="text-6xl sm:text-7xl font-bold text-[#5a39a7]">FocusU</h1>
+    </div>
+    
+    <h2 class="text-4xl sm:text-5xl font-bold mb-4">Selamat datang di FocusU</h2>
+    <p class="max-w-2xl mb-6 text-gray-600 text-base sm:text-lg tracking-wide"> FocusU adalah website edukasi yang membantu kamu tetap fokus saat belajar menggunakan teknik Pomodoro.</p>
     <a href="pomodoro.html" class="bg-[#f35026] hover:bg-[#d6411f] text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">Mulai Pomodoro Timer</a>
+    
+     <!-- Scroll Indicator -->
+    <div class="mt-10">
+      <a href="#fitur">
+        <img src="public/assets/images/scrollDown.png" alt="Scroll Down" class="w-8 h-8 mx-auto animate-bounce mt-6 hover:opacity-70 transition">
+      </a>
+    </div>
+    
   </section>
 
+
+
+
   <!-- Fitur FocusU -->
-  <section class="py-20 px-4 bg-white" data-aos="fade-up">
+  <section class="py-20 px-4 bg-white" data-aos="fade-up" id="fitur" >
     <div class="max-w-4xl mx-auto text-center">
       <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Fitur FocusU</h3>
       <p class="mb-10 text-gray-600">FocusU menyediakan berbagai fitur yang mendukung pengalaman belajar yang terstruktur dan menyenangkan:</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <div class="bg-[#fee5df] p-6 rounded-lg shadow-sm">
+          <img src="public/assets/images/alarmClock.png" alt="Pomodoro Timer" class="w-10 h-10 mx-auto mb-3">
           <h4 class="font-semibold text-lg mb-2 text-[#f35026]">Pomodoro Timer</h4>
           <p class="text-sm">Fokus belajar dengan teknik Pomodoro (25 menit belajar, 5 menit istirahat).</p>
         </div>
         <div class="bg-[#cfd5fc] p-6 rounded-lg shadow-sm">
+          <img src="public/assets/images/toDoList.png" alt="To-Do List" class="w-10 h-10 mx-auto mb-3">
           <h4 class="font-semibold text-lg mb-2 text-[#5a39a7]">To-Do List</h4>
           <p class="text-sm">Atur daftar tugas yang ingin diselesaikan dalam satu sesi belajar.</p>
         </div>
         <div class="bg-[#fee5df] p-6 rounded-lg shadow-sm">
+          <img src="public/assets/images/notes.png" alt="Catatan Belajar" class="w-10 h-10 mx-auto mb-3">
           <h4 class="font-semibold text-lg mb-2 text-[#f35026]">Catatan Belajar</h4>
           <p class="text-sm">Tulis apa yang telah kamu pelajari setelah sesi Pomodoro selesai.</p>
         </div>
         <div class="bg-[#cfd5fc] p-6 rounded-lg shadow-sm">
+          <img src="public/assets/images/spotify.png" alt="Musik Fokus" class="w-10 h-10 mx-auto mb-3">
           <h4 class="font-semibold text-lg mb-2 text-[#5a39a7]">Musik Fokus</h4>
           <p class="text-sm">Dengarkan musik fokus dari Spotify saat kamu belajar.</p>
         </div>
@@ -61,46 +86,119 @@
     </div>
   </section>
 
-  <!-- Cara Kerja Pomodoro -->
-  <section class="py-20 px-6 bg-[#f5f5f5]" data-aos="fade-up">
-    <div class="max-w-3xl mx-auto text-center">
-      <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Bagaimana Cara Kerja Teknik Pomodoro?</h3>
-      <p class="text-gray-600">Teknik Pomodoro membagi waktu belajar menjadi sesi 25 menit yang disebut "Pomodoro", diselingi dengan istirahat 5 menit. Setelah 4 sesi, ambil istirahat lebih panjang (15-30 menit). Metode ini membantu otak tetap segar dan fokus.</p>
-    </div>
-  </section>
+    <!-- Cara Menggunakan + Testimoni Slider -->
+  <section class="py-20 px-6 bg-[#fefefe]" data-aos="fade-up">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-  <!-- Cara Menggunakan Aplikasi -->
-  <section class="py-20 px-6 bg-white" data-aos="fade-up">
-    <div class="max-w-4xl mx-auto text-center">
-      <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Cara Menggunakan FocusU</h3>
-      <ol class="text-left max-w-2xl mx-auto text-gray-700 space-y-4 list-decimal list-inside">
-        <li>Buka halaman Pomodoro dan klik mulai.</li>
-        <li>Gunakan To-Do List untuk merencanakan tugasmu.</li>
-        <li>Fokus selama 25 menit sambil mendengarkan musik.</li>
-        <li>Setelah selesai, tuliskan catatan belajar kamu.</li>
-        <li>Ulangi siklus sesuai kebutuhanmu.</li>
-      </ol>
+      <!-- Kolom Kiri: Cara Menggunakan -->
+      <div>
+        <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Cara Menggunakan FocusU</h3>
+        <ol class="text-gray-700 space-y-4 list-decimal list-inside">
+          <li>Buka halaman Pomodoro dan klik mulai.</li>
+          <li>Gunakan To-Do List untuk merencanakan tugasmu.</li>
+          <li>Fokus selama 25 menit sambil mendengarkan musik.</li>
+          <li>Setelah selesai, tuliskan catatan belajar kamu.</li>
+          <li>Ulangi siklus sesuai kebutuhanmu.</li>
+        </ol>
+      </div>
+
+      <!-- Kolom Kanan: Testimoni Slider -->
+      <div>
+        <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+
+            <!-- Testimoni 1 -->
+            <div class="swiper-slide bg-[#f5f3fe] rounded-xl p-8 shadow-md text-center flex flex-col items-center">
+              <img src="public/assets/images/quote.png" alt="Notes" class="w-8 h-8 mb-4">
+              <p class="text-gray-800 italic mb-6">“FocusU sangat membantuku belajar lebih efektif dengan Pomodoro: aku bisa lebih fokus dan produktif setiap hari!”</p>
+              <img src="public/assets/images/fotoTestimoni1.png" alt="User 1" class="w-20 h-20 rounded-full object-cover mb-2">
+              <p class="font-semibold text-[#5a39a7]">Sherly</p>
+            </div>
+
+            <!-- Testimoni 2 -->
+            <div class="swiper-slide bg-[#f5f3fe] rounded-xl p-8 shadow-md text-center flex flex-col items-center">
+              <img src="public/assets/images/quote.png" alt="Notes" class="w-8 h-8 mb-4">
+              <p class="text-gray-800 italic mb-6">“Sesi Pomodoro-nya bikin aku lebih disiplin belajar. Timer-nya juga nyaman banget dipakai.”</p>
+              <img src="public/assets/images/fotoTestimoni2.png" alt="User 2" class="w-20 h-20 rounded-full object-cover mb-2">
+              <p class="font-semibold text-[#5a39a7]">Reza</p>
+            </div>
+
+            <!-- Testimoni 3 -->
+            <div class="swiper-slide bg-[#f5f3fe] rounded-xl p-8 shadow-md text-center flex flex-col items-center">
+              <img src="public/assets/images/quote.png" alt="Notes" class="w-8 h-8 mb-4">
+              <p class="text-gray-800 italic mb-6">“Dengan FocusU, aku bisa nyusun to-do list, catatan belajar, bahkan sambil dengerin musik loh!”</p>
+              <img src="public/assets/images/fotoTestimoni3.png" alt="User 3" class="w-20 h-20 rounded-full object-cover mb-2">
+              <p class="font-semibold text-[#5a39a7]">Alini</p>
+            </div>
+
+            <!-- Testimoni 4 -->
+            <div class="swiper-slide bg-[#f5f3fe] rounded-xl p-8 shadow-md text-center flex flex-col items-center">
+              <img src="public/assets/images/quote.png" alt="Notes" class="w-8 h-8 mb-4">
+              <p class="text-gray-800 italic mb-6">“Saya jadi bisa atur waktu belajar dan istirahat dengan lebih baik. Fokus banget!”</p>
+              <img src="public/assets/images/fotoTestimoni4.png" alt="User 4" class="w-20 h-20 rounded-full object-cover mb-2">
+              <p class="font-semibold text-[#5a39a7]">Rexxy</p>
+            </div>
+
+            <!-- Testimoni 5 -->
+            <div class="swiper-slide bg-[#f5f3fe] rounded-xl p-8 shadow-md text-center flex flex-col items-center">
+              <img src="public/assets/images/quote.png" alt="Notes" class="w-8 h-8 mb-4">
+              <p class="text-gray-800 italic mb-6">“Antarmuka FocusU mudah digunakan, cocok banget buat mahasiswa kayak aku!”</p>
+              <img src="public/assets/images/fotoTestimoni5.png" alt="User 5" class="w-20 h-20 rounded-full object-cover mb-2">
+              <p class="font-semibold text-[#5a39a7]">Oi Eugene</p>
+            </div>
+            
+          </div>
+
+          <!-- Dot Pagination -->
+          <div class="swiper-pagination mt-6"></div>
+
+        </div>
+      </div>
+
     </div>
   </section>
 
   <!-- Kenapa Pomodoro Penting -->
-  <section class="py-20 px-6 bg-[#f5f5f5]" data-aos="fade-up">
-    <div class="max-w-4xl mx-auto text-center">
-      <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Kenapa Teknik Pomodoro Itu Penting?</h3>
-      <p class="text-gray-700 mb-6">Teknik ini cocok untuk pelajar, mahasiswa, pekerja kantoran, freelancer, atau siapa pun yang butuh fokus. Pomodoro membantu mengurangi distraksi, meningkatkan produktivitas, dan menjaga kesehatan mental saat bekerja dalam waktu lama.</p>
-    </div>
+  <section class="py-20 px-6 bg-white" data-aos="fade-up">
+      <div class="max-w-4xl mx-auto text-center">
+        <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Kenapa Teknik Pomodoro Itu Penting?</h3>
+        <p class="text-gray-700 mb-6">Teknik ini cocok untuk pelajar, mahasiswa, pekerja kantoran, freelancer, atau siapa pun yang butuh fokus. Pomodoro membantu mengurangi distraksi, meningkatkan produktivitas, dan menjaga kesehatan mental saat bekerja dalam waktu lama.</p>
+        <a href="pomodoro.html" class="inline-block mt-6 bg-[#f35026] hover:bg-[#d6411f] text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300">Mulai Sekarang</a>
+      </div>
   </section>
 
   <!-- Footer -->
   <footer class="bg-[#5a39a7] text-white text-center py-6">
-    <p class="mb-2">&copy; 2025 FocusU. All rights reserved.</p>
-    <a href="tentang.html" class="underline hover:text-[#fee5df]">Tentang Aplikasi</a>
+      <p class="mb-2">&copy; 2025 FocusU. All rights reserved.</p>
+      <a href="tentang.html" class="underline hover:text-[#fee5df]">Tentang Aplikasi</a>
   </footer>
 
-  <!-- AOS.js -->
+
   <script>
-    AOS.init({ once: false });
+    // AOS.js
+    AOS.init({ duration: 800, once: false });
+    
+
+    // Swiper init
+    const swiper = new Swiper('.mySwiper', {
+    loop: true,
+    spaceBetween: 20,
+    slidesPerView: 1,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+   
+    breakpoints: {
+      768: { slidesPerView: 1 },
+    }
+    });
+    
   </script>
+
+  
+
+
 
 </body>
 </html>

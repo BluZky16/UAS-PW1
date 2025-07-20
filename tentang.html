@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Kami - FocusU</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+    
+    <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-gradient-to-b from-green-100 to-white" data-aos="fade-up">
+        <a href="index.html"
+        class="fixed sm:absolute font-semibold top-4 left-4 sm:top-6 sm:left-6 bg-green-600 text-white text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow hover:bg-green-700 transition duration-300 z-50">
+        Beranda
+     </a>
+        <h1 class="text-4xl sm:text-5xl font-bold text-green-600 mb-4">Tentang Kami</h1>
+        <h2 class="text-2xl sm:text-3xl font-semibold mb-4">Apa itu FocusU</h2>
+        <p class="max-w-2xl mb-6 text-gray-700 leading-relaxed">FocusU adalah website edukasi yang didedikasikan untuk membantu Anda meningkatkan fokus dan produktivitas melalui penerapan teknik Pomodoro. Kami percaya bahwa dengan struktur waktu yang tepat dan istirahat yang terencana, Anda dapat mencapai potensi belajar atau kerja maksimal tanpa merasa kewalahan.</p>
+        <p class="max-w-2xl mb-8 text-gray-700 leading-relaxed">Aplikasi kami dirancang untuk kemudahan penggunaan, menyediakan timer Pomodoro yang intuitif, fitur to-do list untuk mengatur tugas, dan ruang untuk mencatat refleksi belajar Anda. Kami berkomitmen untuk menyediakan alat yang efektif dan mendukung kebiasaan belajar yang sehat dan berkelanjutan.</p>
+        <a href="pomodoro.html" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 mb-6 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Mulai Pomodoro Sekarang!</a>
+    </section>
+
+    <footer class="bg-green-700 text-white text-center py-6">
+        <p class="mb-2">&copy; 2025 FocusU. All rights reserved.</p>
+        <p class="text-sm">Dibuat dengan ❤️ untuk produktivitas Anda.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            duration: 800
+        });
+    </script>
+</body>
+</html>

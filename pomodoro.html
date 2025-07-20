@@ -16,6 +16,62 @@
 
 
     <style>
+        /* Container utama untuk pengaturan */
+        .mt-3.text-center.sm\:mt-0.sm\:ml-4.sm\:text-left.w-full {
+            background-color: #f0f4f8; /* soft gray untuk latar */
+            padding: 1.25rem; /* padding agar tidak mepet */
+            border-radius: 12px; /* sudut membulat */
+            box-shadow: 0 4px 10px rgba(160,180,235,0.15); /* shadow lembut */
+        }
+
+        /* Judul pengaturan */
+        #settings-title {
+            color: #2c3e8f; /* warna biru yang agak lebih gelap */
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Container form field */
+        .mt-4.space-y-4 > div {
+            margin-bottom: 0.6rem;
+        }
+
+        /* Label form */
+        .mt-4.space-y-4 label {
+            color: #506484; /* abu-abu soft blue */
+            font-weight: 500;
+        }
+
+        /* Input form */
+        .mt-4.space-y-4 input[type="number"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid #a8c0ff; /* pastel blue border */
+            border-radius: 8px; /* membulat */
+            background-color: #e8efff; /* sangat soft pastel blue */
+            color: #3a3f55; /* teks abu abu gelap */
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: none;
+            outline: none;
+        }
+
+        /* Fokus pada input */
+        .mt-4.space-y-4 input[type="number"]:focus {
+            border-color: #5a7de8; /* biru medium saat focus */
+            background-color: #d4dbff; /* sedikit terang saat fokus */
+            box-shadow: 0 0 8px rgba(90,125,232,0.35);
+        }
+
+        /* Placeholder (jika ada) */
+        .mt-4.space-y-4 input[type="number"]::placeholder {
+            color: #8593b2;
+        }
+
+        /* Hilangkan ring biru default Tailwind saat focus (jika ada) */
+        .mt-4.space-y-4 input[type="number"]:focus-visible {
+            outline: none;
+        }
         /* Custom styles using Inter font */
         body {
             font-family: 'Inter', sans-serif;

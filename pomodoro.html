@@ -87,6 +87,7 @@
 <body id="app-body" class="overflow-x-hidden">
     <!-- Suara Notifikasi -->
     <audio id="notification-sound" src="./public/assets/sounds/notif-sound.mp3" preload="auto" loop></audio>
+    <audio id="background-music" src="./public/assets/music/Daniel Caesar, Rex Orange County - Rearrange My World (Audio) [ ezmp3.cc ].mp3" loop></audio>
 
     <!-- Alarm Modal -->
     <div id="alarm-modal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 z-50 transition-all duration-300">
@@ -149,6 +150,16 @@
                                             class="w-full px-3 py-2 border border-[var(--ungu-pastel)] rounded-lg
                                             bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500
                                             focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300">
+                                    </div>
+
+                                    <div>
+                                        <label for="music-select" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Pilih Musik
+                                        </label>
+                                        <select id="music-select" class="w-full px-3 py-2 border border-[var(--ungu-pastel)] rounded-lg
+                                            bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500
+                                            focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -225,8 +236,23 @@
                     <div class="flex gap-3 justify-center">
                         <button id="settings-btn" class="p-2 w-fit font-semibold rounded-lg bg-white/40 hover:bg-white/50 transition-all">
                             <!-- Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="-1 -1 18 18">
+                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c-1.4-.413-1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                            </svg>
+                        </button>
+                        <button id="music-btn" class="p-2 w-fit font-semibold rounded-lg bg-white/40 hover:bg-white/50 transition-all">
+                            <!-- Music On Icon -->
+                            <svg id="music-on-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                                <path fill-rule="evenodd" d="M9 3v10H8V3h1z"/>
+                                <path d="M8 2.5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0v-9a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                            <!-- Music Off Icon -->
+                            <svg id="music-off-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="hidden" viewBox="0 0 16 16">
+                                <path d="M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"/>
+                                <path fill-rule="evenodd" d="M9 3v10H8V3h1z"/>
+                                <path d="M8 2.5a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-1 0v-9a.5.5 0 0 1 .5-.5z"/>
+                                <path d="M 2 2 L 14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -396,6 +422,7 @@
 
 
 
+    <script src="music-list.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const HISTORY_KEY = 'pomodoro_history';
@@ -557,6 +584,10 @@
             const startPauseBtn = document.getElementById('start-pause-btn');
             const resetBtn = document.getElementById('reset-btn');
             const settingsBtn = document.getElementById('settings-btn');
+            const musicBtn = document.getElementById('music-btn');
+            const musicOnIcon = document.getElementById('music-on-icon');
+            const musicOffIcon = document.getElementById('music-off-icon');
+            const backgroundMusic = document.getElementById('background-music');
             const pomodoroBtn = document.getElementById('pomodoro-btn');
             const shortBreakBtn = document.getElementById('short-break-btn');
             const longBreakBtn = document.getElementById('long-break-btn');
@@ -581,6 +612,7 @@
             const shortBreakInput = document.getElementById('short-break-input');
             const longBreakInput = document.getElementById('long-break-input');
             const cyclesInput = document.getElementById('cycles-input');
+            const musicSelect = document.getElementById('music-select');
             const saveSettingsBtn = document.getElementById('save-settings-btn');
             const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
 
@@ -659,6 +691,23 @@
             const savedSettings = localStorage.getItem('pomodoro_settings');
             if (savedSettings) {
                 settings = JSON.parse(savedSettings);
+            }
+
+            function populateMusicSelect() {
+                musicFiles.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = `./public/assets/music/${file}`;
+                    option.textContent = file.split('.mp3')[0]; // Simplified name
+                    musicSelect.appendChild(option);
+                });
+            }
+
+            function loadMusicSelection() {
+                const savedMusic = localStorage.getItem('pomodoro_music');
+                if (savedMusic) {
+                    backgroundMusic.src = savedMusic;
+                    musicSelect.value = savedMusic;
+                }
             }
 
             const HISTORY_KEY = 'pomodoro_history';
@@ -819,6 +868,18 @@
             resetBtn.addEventListener('click', resetTimer);
             settingsBtn.addEventListener('click', openSettingsModal);
 
+            musicBtn.addEventListener('click', () => {
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicOnIcon.classList.remove('hidden');
+                    musicOffIcon.classList.add('hidden');
+                } else {
+                    backgroundMusic.pause();
+                    musicOnIcon.classList.add('hidden');
+                    musicOffIcon.classList.remove('hidden');
+                }
+            });
+
             pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
             shortBreakBtn.addEventListener('click', () => switchMode('shortBreak'));
             longBreakBtn.addEventListener('click', () => switchMode('longBreak'));
@@ -828,10 +889,18 @@
             cancelSettingsBtn.addEventListener('click', closeSettingsModal);
             settingsBackdrop.addEventListener('click', closeSettingsModal);
 
+            musicSelect.addEventListener('change', () => {
+                const selectedMusic = musicSelect.value;
+                backgroundMusic.src = selectedMusic;
+                localStorage.setItem('pomodoro_music', selectedMusic);
+            });
+
             // --- Initial Setup ---
             window.addEventListener('load', () => {
                 cyclesTargetDisplay.textContent = settings.cyclesBeforeLongBreak;
                 switchMode('pomodoro');
+                populateMusicSelect();
+                loadMusicSelection();
             });
 
             function openNotesModal() {

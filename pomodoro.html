@@ -380,10 +380,12 @@
                 pomodoroHistory.slice().reverse().forEach(note => {
                     const tr = document.createElement('tr');
                     tr.className = 'border-b border-white/10 hover:bg-white/5 transition-colors';
-                    tr.innerHTML = `
-                <td class="px-6 py-3 whitespace-nowrap text-white/90">${new Date(note.timestamp).toLocaleString('id-ID')}</td>
-                <td class="px-6 py-3 text-white/80">${note.note ? note.note.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '-'}</td>
-            `;
+                    tr.innerHTML = 
+                    `
+                        <td class="px-6 py-3 whitespace-nowrap text-white/90">${new Date(note.timestamp).toLocaleString('id-ID')}</td>
+                        <td class="px-6 py-3 text-white/80">${note.note ? note.note.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '-'}</td>
+                    `;
+                    
                     notesTableBody.appendChild(tr);
                 });
             }
@@ -723,7 +725,7 @@
                     startBtnColor = 'bg-white text-green-500';
                 }
 
-                appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 ${bgColor}`;
+                appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 bg-gray-900`;
                 activeBtn.classList.add('active', 'text-white', activeBtnColor);
                 startPauseBtn.className = `p-2 font-bold rounded-lg transition-all bg-white ${startBtnColor}`;
             }

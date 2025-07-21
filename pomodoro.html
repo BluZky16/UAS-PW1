@@ -18,27 +18,33 @@
     <style>
         /* Container utama untuk pengaturan */
         .mt-3.text-center.sm\:mt-0.sm\:ml-4.sm\:text-left.w-full {
-            background-color: #f0f4f8; /* soft gray untuk latar */
-            padding: 1.25rem; /* padding agar tidak mepet */
-            border-radius: 12px; /* sudut membulat */
-            box-shadow: 0 4px 10px rgba(160,180,235,0.15); /* shadow lembut */
+            background-color: #f0f4f8;
+            /* soft gray untuk latar */
+            padding: 1.25rem;
+            /* padding agar tidak mepet */
+            border-radius: 12px;
+            /* sudut membulat */
+            box-shadow: 0 4px 10px rgba(160, 180, 235, 0.15);
+            /* shadow lembut */
         }
 
         /* Judul pengaturan */
         #settings-title {
-            color: #2c3e8f; /* warna biru yang agak lebih gelap */
+            color: #2c3e8f;
+            /* warna biru yang agak lebih gelap */
             font-weight: 600;
             margin-bottom: 0.75rem;
         }
 
         /* Container form field */
-        .mt-4.space-y-4 > div {
+        .mt-4.space-y-4>div {
             margin-bottom: 0.6rem;
         }
 
         /* Label form */
         .mt-4.space-y-4 label {
-            color: #506484; /* abu-abu soft blue */
+            color: #506484;
+            /* abu-abu soft blue */
             font-weight: 500;
         }
 
@@ -46,10 +52,14 @@
         .mt-4.space-y-4 input[type="number"] {
             width: 100%;
             padding: 0.5rem 0.75rem;
-            border: 1.5px solid #a8c0ff; /* pastel blue border */
-            border-radius: 8px; /* membulat */
-            background-color: #e8efff; /* sangat soft pastel blue */
-            color: #3a3f55; /* teks abu abu gelap */
+            border: 1.5px solid #a8c0ff;
+            /* pastel blue border */
+            border-radius: 8px;
+            /* membulat */
+            background-color: #e8efff;
+            /* sangat soft pastel blue */
+            color: #3a3f55;
+            /* teks abu abu gelap */
             font-size: 1rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
             box-shadow: none;
@@ -58,9 +68,11 @@
 
         /* Fokus pada input */
         .mt-4.space-y-4 input[type="number"]:focus {
-            border-color: #5a7de8; /* biru medium saat focus */
-            background-color: #d4dbff; /* sedikit terang saat fokus */
-            box-shadow: 0 0 8px rgba(90,125,232,0.35);
+            border-color: #5a7de8;
+            /* biru medium saat focus */
+            background-color: #d4dbff;
+            /* sedikit terang saat fokus */
+            box-shadow: 0 0 8px rgba(90, 125, 232, 0.35);
         }
 
         /* Placeholder (jika ada) */
@@ -72,6 +84,7 @@
         .mt-4.space-y-4 input[type="number"]:focus-visible {
             outline: none;
         }
+
         /* Custom styles using Inter font */
         body {
             font-family: 'Inter', sans-serif;
@@ -116,11 +129,15 @@
 <body id="app-body" class="overflow-x-hidden">
     <audio id="notification-sound" src="./public/assets/sounds/notif-sound.mp3" preload="auto" loop></audio>
 
-    <div id="alarm-modal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 z-50 transition-all duration-300">
-        <div aria-hidden="true" class="fixed inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
-        <div class="transform bg-white text-black p-6 rounded-2xl shadow-xl transition-all duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 max-w-sm w-full text-center">
+    <div id="alarm-modal"
+        class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 z-50 transition-all duration-300">
+        <div aria-hidden="true"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        <div
+            class="transform bg-white text-black p-6 rounded-2xl shadow-xl transition-all duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 max-w-sm w-full text-center">
             <p class="text-lg font-bold mb-4">Waktu selesai!</p>
-            <button id="stop-alarm-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Stop Alarm</button>
+            <button id="stop-alarm-btn"
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Stop Alarm</button>
         </div>
     </div>
 
@@ -522,6 +539,49 @@
             const saveSettingsBtn = document.getElementById('save-settings-btn');
             const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
 
+            // Alarm modal elements
+            const alarmModal = document.getElementById('alarm-modal');
+            const alarmBackdrop = alarmModal.querySelector('[aria-hidden]');
+            const alarmPanel = alarmModal.querySelector('.transform');
+            const stopAlarmBtn = document.getElementById('stop-alarm-btn');
+
+            let alarmPlaying = false;
+
+            function playNotificationSound() {
+                const sound = document.getElementById('notification-sound');
+                if (!alarmPlaying) {
+                    alarmPlaying = true;
+                    sound.currentTime = 0;
+                    sound.play();
+
+                    openAlarmModal();
+                }
+            }
+
+            function stopAlarm() {
+                const sound = document.getElementById('notification-sound');
+                sound.pause();
+                sound.currentTime = 0;
+                alarmPlaying = false;
+
+                closeAlarmModal();
+            }
+
+            function openAlarmModal() {
+                alarmModal.classList.remove('pointer-events-none', 'opacity-0');
+                alarmBackdrop.classList.remove('opacity-0');
+                alarmPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            function closeAlarmModal() {
+                alarmModal.classList.add('pointer-events-none', 'opacity-0');
+                alarmBackdrop.classList.add('opacity-0');
+                alarmPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            stopAlarmBtn.addEventListener('click', stopAlarm);
+            alarmBackdrop.addEventListener('click', stopAlarm);
+
             // --- State Variables ---
             let timerId = null;
             let timeLeft = settings.pomodoroTime * 60;
@@ -529,21 +589,6 @@
             let isPaused = true;
             let cyclesCompleted = 0;
 
-
-            function playNotificationSound() {
-                const sound = document.getElementById('notification-sound');
-                sound.currentTime = 0;
-                sound.play();
-
-                // Tampilkan konfirmasi setelah 1 detik (biar sound sempat mulai)
-                setTimeout(() => {
-                    const stop = confirm('Waktu selesai! Klik OK untuk menghentikan alarm.');
-                    if (stop) {
-                        sound.pause();
-                        sound.currentTime = 0;
-                    }
-                }, 1000);
-            }
 
 
             // --- Settings Modal Functions ---

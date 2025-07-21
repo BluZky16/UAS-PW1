@@ -746,10 +746,6 @@
 
             // --- Event Listeners ---
             startPauseBtn.addEventListener('click', () => {
-                if (Tone.context.state !== 'running') {
-                    Tone.start();
-                }
-
                 if (isPaused) {
                     startTimer();
                 } else {

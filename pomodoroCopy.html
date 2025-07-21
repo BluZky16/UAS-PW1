@@ -2,207 +2,212 @@
 <html lang="id" class="overflow-x-hidden">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pomodoro Timer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --ungu: #5a39a7;
-      --oren: #f35026;
-      --oren-pastel: #fee5df;
-      --ungu-pastel: #cfd5fc;
-      --ungu-pastel2: #9a7edb ;
-    }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-      background-color: #fefefe;
-      color: #1f2937;
-    }
+    <style>
+        /* Container utama untuk pengaturan */
+        .mt-3.text-center.sm\:mt-0.sm\:ml-4.sm\:text-left.w-full {
+            background-color: #f0f4f8; /* soft gray untuk latar */
+            padding: 1.25rem; /* padding agar tidak mepet */
+            border-radius: 12px; /* sudut membulat */
+            box-shadow: 0 4px 10px rgba(160,180,235,0.15); /* shadow lembut */
+        }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      border-radius: 10px;
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: var(--ungu);
-      border-radius: 8px;
-    }
+        /* Judul pengaturan */
+        #settings-title {
+            color: #2c3e8f; /* warna biru yang agak lebih gelap */
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
 
-    /* Active mode button */
-    .btn-mode.active {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
+        /* Container form field */
+        .mt-4.space-y-4 > div {
+            margin-bottom: 0.6rem;
+        }
 
-    /* General input styling */
-    input[type="number"],
-    input[type="text"],
-    textarea {
-      font-family: 'Poppins', sans-serif;
-      border: 1.5px solid #a8c0ff;
-      background-color: #e8efff;
-      border-radius: 8px;
-      color: #333;
-      padding: 0.5rem 0.75rem;
-      transition: all 0.3s ease;
-    }
+        /* Label form */
+        .mt-4.space-y-4 label {
+            color: #506484; /* abu-abu soft blue */
+            font-weight: 500;
+        }
 
-    input:focus,
-    textarea:focus {
-      outline: none;
-      border-color: var(--ungu);
-      background-color: #d4dbff;
-      box-shadow: 0 0 8px rgba(90, 125, 232, 0.35);
-    }
+        /* Input form */
+        .mt-4.space-y-4 input[type="number"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid #a8c0ff; /* pastel blue border */
+            border-radius: 8px; /* membulat */
+            background-color: #e8efff; /* sangat soft pastel blue */
+            color: #3a3f55; /* teks abu abu gelap */
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: none;
+            outline: none;
+        }
 
-    /* Button timer */
+        /* Fokus pada input */
+        .mt-4.space-y-4 input[type="number"]:focus {
+            border-color: #5a7de8; /* biru medium saat focus */
+            background-color: #d4dbff; /* sedikit terang saat fokus */
+            box-shadow: 0 0 8px rgba(90,125,232,0.35);
+        }
 
-    .btn-pomodoro {
-    background-color: var(--oren) !important;
-    color: white !important;
-    }
-    .btn-short {
-        background-color: var(--ungu) !important;
-        color: white !important;
-    }
-    .btn-long {
-        background-color: var(--ungu-pastel2) !important;
-        color: white !important;
-    }
+        /* Placeholder (jika ada) */
+        .mt-4.space-y-4 input[type="number"]::placeholder {
+            color: #8593b2;
+        }
 
-  </style>
+        /* Hilangkan ring biru default Tailwind saat focus (jika ada) */
+        .mt-4.space-y-4 input[type="number"]:focus-visible {
+            outline: none;
+        }
+        /* Custom styles using Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            /* Disable tap highlight on mobile */
+        }
+
+        /* Style for the active mode button */
+        .btn-mode.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Width */
+        /* Custom Scrollbar Styles - Global */
+        ::-webkit-scrollbar {
+            width: 8px;
+            border-radius: 10px;
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: oklch(55.2% 0.016 285.938);
+            border-radius: 8px;
+            height: 1rem;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: oklch(55.2% 0.016 285.938);
+        }
+    </style>
 </head>
 
 <body id="app-body" class="overflow-x-hidden">
-    <!-- Suara Notifikasi -->
     <audio id="notification-sound" src="./public/assets/sounds/notif-sound.mp3" preload="auto" loop></audio>
 
-    <!-- Alarm Modal -->
     <div id="alarm-modal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 z-50 transition-all duration-300">
         <div aria-hidden="true" class="fixed inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
-        <div class="transform bg-white text-[#5a39a7] p-6 rounded-2xl shadow-xl transition-all duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 max-w-sm w-full text-center">
+        <div class="transform bg-white text-black p-6 rounded-2xl shadow-xl transition-all duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 max-w-sm w-full text-center">
             <p class="text-lg font-bold mb-4">Waktu selesai!</p>
-            <button id="stop-alarm-btn" class="bg-[#f35026] hover:bg-[#d6411f] text-white px-4 py-2 rounded-lg transition-all">Stop Alarm</button>
+            <button id="stop-alarm-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Stop Alarm</button>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-opacity duration-300 pointer-events-none opacity-0">
-        <div aria-hidden="true" class="fixed inset-0 bg-black/60 transition-opacity opacity-0 backdrop-blur-sm"></div>
+    <div id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title"
+        class="relative z-10 pointer-events-none opacity-0">
+        <div aria-hidden="true" class="fixed inset-0 bg-black/75 transition-opacity opacity-0"></div>
+
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                    <div class="px-6 pt-6 pb-4 sm:p-6 sm:pb-4">
+                <div
+                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <div class="sm:flex sm:items-start">
+
                             <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 id="settings-title" class="text-lg font-semibold text-[var(--ungu)] mb-4">
-                                    Pengaturan Pomodoro
-                                </h3>
-                                <div class="space-y-4">
-                                    <!-- Input Group -->
+                                <h3 id="settings-title" class="text-base font-semibold text-gray-900">
+                                    Pengaturan Pomodoro</h3>
+                                <div class="mt-4 space-y-4">
                                     <div>
-                                        <label for="pomodoro-input" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <label for="pomodoro-input"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
                                             Waktu Pomodoro (menit)
                                         </label>
                                         <input type="number" id="pomodoro-input" min="1" max="60" value="25"
-                                            class="w-full px-3 py-2 border border-[var(--ungu-pastel)] rounded-lg
-                                            bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500
-                                            focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
-
                                     <div>
-                                        <label for="short-break-input" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <label for="short-break-input"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
                                             Istirahat Pendek (menit)
                                         </label>
                                         <input type="number" id="short-break-input" min="1" max="30" value="5"
-                                            class="w-full px-3 py-2 border border-[var(--ungu-pastel)] rounded-lg
-                                            bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500
-                                            focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
-
                                     <div>
-                                        <label for="long-break-input" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <label for="long-break-input"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
                                             Istirahat Panjang (menit)
                                         </label>
                                         <input type="number" id="long-break-input" min="1" max="60" value="15"
-                                            class="w-full px-3 py-2 border border-[var(--ungu-pastel)] rounded-lg
-                                            bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500
-                                            focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
-
                                     <div>
                                         <label for="cycles-input" class="block text-sm font-medium text-gray-700 mb-1">
                                             Siklus Sebelum Istirahat Panjang
                                         </label>
                                         <input type="number" id="cycles-input" min="1" max="10" value="4"
-                                            class="w-full px-3 py-2 border border-[var(--ungu-pastel)] rounded-lg
-                                            bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500
-                                            focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300">
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Footer Buttons -->
-                    <div class="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse sm:px-6 rounded-b-2xl">
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                         <button type="button" id="save-settings-btn"
-                            class="inline-flex justify-center rounded-md bg-[var(--oren)] hover:bg-[#d6411f]
-                            px-5 py-2 text-sm font-semibold text-white shadow transition duration-300 sm:ml-3 sm:w-auto">
-                            Simpan
-                        </button>
+                            class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 sm:ml-3 sm:w-auto">Simpan</button>
                         <button type="button" id="cancel-settings-btn"
-                            class="mt-3 inline-flex justify-center rounded-md bg-white text-[var(--ungu)] font-semibold
-                            px-5 py-2 text-sm shadow ring-1 ring-[var(--ungu)] hover:bg-[var(--ungu-pastel)] transition duration-300 sm:mt-0 sm:w-auto">
-                            Batal
-                        </button>
+                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
     <!-- Notes Modal -->
-    <div id="notes-modal" role="dialog" aria-modal="true" aria-labelledby="notes-title" class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-opacity duration-300 pointer-events-none opacity-0">
-        <div aria-hidden="true" class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-0"></div>
+    <div id="notes-modal" role="dialog" aria-modal="true" aria-labelledby="notes-title"
+        class="relative z-10 pointer-events-none opacity-0">
+        <div aria-hidden="true" class="fixed inset-0 bg-black/75 transition-opacity opacity-0"></div>
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-                    <div class="px-6 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <h3 id="notes-title" class="text-lg font-semibold text-[var(--ungu)] mb-4 text-center">
+                <div
+                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 id="notes-title" class="text-base font-semibold text-gray-900 mb-4">
                             Catatan Setelah Selesai Pomodoro
                         </h3>
                         <textarea id="notes-input" rows="4"
-                            class="w-full px-4 py-3 border border-[var(--ungu-pastel)] rounded-lg
-                            bg-[var(--ungu-pastel)] text-gray-800 placeholder-gray-500 text-sm
-                            focus:outline-none focus:ring-2 focus:ring-[var(--ungu)] focus:border-transparent transition duration-300"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="Tulis catatan atau refleksi tentang sesi ini..."></textarea>
                     </div>
-
-                    <div class="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse sm:px-6 rounded-b-2xl">
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                         <button type="button" id="save-notes-btn"
-                            class="inline-flex justify-center rounded-md bg-[var(--oren)] hover:bg-[#d6411f]
-                            px-5 py-2 text-sm font-semibold text-white shadow transition duration-300 sm:ml-3 sm:w-auto">
-                            Simpan
-                        </button>
+                            class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 sm:ml-3 sm:w-auto">Simpan</button>
                         <button type="button" id="cancel-notes-btn"
-                            class="mt-3 inline-flex justify-center rounded-md bg-white text-[var(--ungu)] font-semibold
-                            px-5 py-2 text-sm shadow ring-1 ring-[var(--ungu)] hover:bg-[var(--ungu-pastel)] transition duration-300 sm:mt-0 sm:w-auto">
-                            Batal
-                        </button>
+                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
                     </div>
                 </div>
             </div>
@@ -214,188 +219,131 @@
         <img id="bg-image" src="./public/assets/images/bg.jpg"
             class="w-full h-full object-cover transition-all duration-500" alt="Background Image">
     </div> -->
-
     <main>
-        <!-- Section Pomodoro Timer -->
-        <section class="flex items-center justify-center min-h-screen w-screen bg-gradient-to-b from-[#cfd5fc] to-white transition-colors duration-500 relative py-5">
+        <section
+            class="flex items-center justify-center min-h-screen w-screen transition-colors duration-500 relative py-5">
+            <img id="bg-image" src="./public/assets/images/bg.jpg"
+                class="absolute inset-0 w-full h-full object-cover -z-10" alt="Background Image">
             <div>
-                <!-- Header Panel -->
-                <div class="w-full lg:max-w-md mx-auto bg-white/30 backdrop-blur-md rounded-3xl shadow-xl flex justify-between mb-7 p-2 px-4 text-[var(--ungu)] items-center">
-                    <h1 class="text-xl font-bold">FocusU</h1>
+                <div
+                    class="w-full lg:max-w-md mx-auto bg-black/30 backdrop-blur-[3px] rounded-3xl shadow-xl flex justify-between mb-7 p-2 px-4 text-white items-center ">
+                    <h1 class="text-xl font-bold ">FocusU</h1>
                     <div class="flex gap-3 justify-center">
-                        <button id="settings-btn" class="p-2 w-fit font-semibold rounded-lg bg-white/40 hover:bg-white/50 transition-all">
-                            <!-- Icon -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                        <button id="settings-btn"
+                            class="p-2 w-fit font-semibold rounded-lg bg-white/20 hover:bg-white/20 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
                             </svg>
                         </button>
                     </div>
                 </div>
 
-                <!-- Konten Timer & To-Do -->
-                <div class="xl:flex mt-8">
+                <div class="xl:flex">
+                    <div
+                        class="w-full lg:max-w-md lg:mx-8 bg-black/30 backdrop-blur-[3px] rounded-3xl shadow-xl xl:max-h-[90vh] max-xl:mb-5">
+                        <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
 
-                    <!-- Timer Card -->
-                    <div class="relative w-full lg:max-w-md lg:mx-8 max-xl:mb-5">
+                            <!-- Mode Selection Buttons -->
+                            <div class="flex justify-center space-x-2 sm:space-x-4 mb-8">
+                                <button id="pomodoro-btn"
+                                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Pomodoro</button>
+                                <button id="short-break-btn"
+                                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat
+                                    Pendek</button>
+                                <button id="long-break-btn"
+                                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat
+                                    Panjang</button>
+                            </div>
 
-                        <!-- Shadow Layer -->
-                        <div class="absolute -inset-1 rotate-6 bg-[#ded4f7] rounded-3xl z-0 "></div>
-                        <div class="absolute -inset-1 rotate-3 bg-[#c0adeb] rounded-3xl z-0 "></div>
+                            <div class="flex justify-center">
+                                <video class="aspect-square w-28 h-28" loop muted playsinline id="gif">
+                                    <source src="./public/assets/videos/oiiaoiia.webm" type="video/webm">
+                                    Your browser does not support transparent WebM video.
+                                </video>
+                            </div>
+                            <!-- Timer Display -->
+                            <div class="text-center my-8">
+                                <h1 id="timer-display" class="text-7xl sm:text-8xl md:text-9xl font-black">25:00</h1>
+                            </div>
 
-                        <!-- Card Timer Utama -->
-                        <div class="relative z-10 bg-[var(--ungu)] text-white rounded-3xl p-6 shadow-xl">
-                            <div class="p-6 px-8 sm:p-8 sm:px-10 font-[Poppins]">
-
-                                <!-- Mode Buttons -->
-                                <div class="flex justify-center space-x-2 sm:space-x-4 mb-8">
-                                    <button id="pomodoro-btn"
-                                        class="btn-mode px-4 py-2 min-w-[120px] whitespace-nowrap text-center rounded-full font-semibold transition-all bg-white/20 hover:bg-[var(--ungu-pastel)] hover:text-[var(--ungu)]">
-                                        Pomodoro
-                                    </button>
-                                    <button id="short-break-btn"
-                                        class="btn-mode px-4 py-2 min-w-[120px] whitespace-nowrap text-center rounded-full font-semibold transition-all bg-white/20 hover:bg-[var(--ungu-pastel)] hover:text-[var(--ungu)]">
-                                        Short Break
-                                    </button>
-                                    <button id="long-break-btn"
-                                        class="btn-mode px-4 py-2 min-w-[120px] whitespace-nowrap text-center rounded-full font-semibold transition-all bg-white/20 hover:bg-[var(--ungu-pastel)] hover:text-[var(--ungu)]">
-                                        Long Break
-                                    </button>
-                                </div>
-
-                                <!-- Animasi -->
-                                <div class="flex justify-center mb-4">
-                                    <video class="aspect-square w-28 h-28" loop muted playsinline id="gif">
-                                        <source src="./public/assets/videos/logoTimerGerak2.webm" type="video/webm" />
-                                    </video>
-                                </div>
-
-                                <!-- Timer -->
-                                <div class="my-6 flex justify-center">
-                                    <h1 id="timer-display" class="text-7xl sm:text-8xl md:text-9xl font-black text-white drop-shadow-lg px-6 py-2 rounded-xl">
-                                        25:00
-                                    </h1>
-                                </div>
-
-
-                                <!-- Tombol Kontrol -->
-                                <div class="flex justify-center gap-4">
-                                    <button id="start-pause-btn"
-                                        class="p-2 font-bold rounded-lg transition-all w-fit bg-white text-[var(--oren)] hover:bg-[var(--oren)] hover:text-white shadow-md">
-                                        <!-- Play Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                            class="bi bi-play-fill" viewBox="0 0 16 16">
-                                            <path
+                            <!-- Control Buttons -->
+                            <div class="flex justify-center gap-4">
+                                <button id="start-pause-btn" class="p-2 font-bold rounded-lg transition-all w-fit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                        class="bi bi-play-fill" viewBox="0 0 16 16">
+                                        <path
                                             d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
-                                        </svg>
-                                    </button>
-
-                                    <button id="reset-btn"
-                                        class="p-2 font-bold rounded-lg transition-all w-fit bg-white text-[var(--ungu)] hover:bg-[var(--ungu)] hover:text-white shadow-md">
-                                        <!-- Reset Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                            class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd"
+                                    </svg>
+                                </button>
+                                <button id="reset-btn"
+                                    class="p-2 w-fit  font-semibold rounded-lg bg-white/20 hover:bg-white/20 transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                        class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
                                             d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
-                                            <path
+                                        <path
                                             d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466" />
-                                        </svg>
-                                    </button>
-                                </div>
-                                    <!-- Progress Info -->
-                                    <div class="text-center mt-6 text-white/80">
-                                        <p class="text-sm">Sesi Selesai: <span id="cycle-count">0</span>/<span id="cycles-target">4</span></p>
-                                    </div>
+                                    </svg>
+                                </button>
+
                             </div>
 
-                            <footer class="text-center mt-4 text-white/40 text-sm pb-4 font-light">
-                                Dibuat oleh FocusU
-                            </footer>
-
+                            <!-- Cycle Counter -->
+                            <div class="text-center mt-8">
+                                <p class="text-sm text-white/50">Sesi Selesai: <span id="cycle-count">0</span>/<span
+                                        id="cycles-target">4</span></p>
+                            </div>
                         </div>
+                        <footer class="text-center mt-4 text-white/40 text-sm pb-4">
+                            Dibuat dengan ❤️ oleh FocusU
+                        </footer>
                     </div>
-                    
-                    <!-- To-do List -->
-                    <div class="relative lg:max-w-md lg:mx-8 w-full">
-
-                        <!-- Shadow  -->
-                        <div class="absolute -inset-1 rotate-6 bg-[#ded4f7] rounded-3xl z-0 "></div>
-                        <div class="absolute -inset-1 rotate-3 bg-[#c0adeb] rounded-3xl z-0 "></div>
-
-                        <!-- To-do List Main Card -->
-                        <section class="bg-[var(--ungu)] text-white rounded-3xl shadow-xl relative z-10 w-full min-h-[630px]">
-                            <div class="p-6 px-8 sm:p-8 sm:px-10">
-                                <p class="text-xl font-bold mb-4">Daftar Tugas</p>
-
-                                <form id="todo-form" class="flex gap-2 mb-4">
-                                    <input id="todo-input" type="text" placeholder="Tambah tugas..." class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--oren)] focus:border-transparent" />
-                                    <button type="submit" class="px-4 py-2 font-semibold rounded-lg bg-[var(--oren)] text-white hover:bg-[var(--oren)] transition-all">
-                                        Tambah
-                                    </button>
-                                </form>
-
-                                <!-- Tugas akan ditampilkan di sini -->
-                                <div class="bg-[var(--ungu-pastel2)] bg-opacity-70 backdrop-blur-sm rounded-2xl p-4 shadow-md text-white min-h-[200px]">
-
-                                    <!-- Daftar Tugas -->
-                                    <ul id="todo-list" 
-                                    class="space-y-2 block overflow-y-auto max-xl:min-h-[300px] xl:max-h-[70vh] pr-1 text-white ">
-                                </ul>
-
-                                    <!-- Optional Placeholder jika kosong -->
-                                    <div id="todo-empty-placeholder" class="text-sm text-white/60 text-center py-4 hidden">
-                                        Belum ada tugas yang ditambahkan.
-                                    </div>
-                                    
-                                </div>
-                              
-                            </div>
-                        </section>
-                    </div>
-
+                    <section
+                        class="w-full lg:max-w-md lg:mx-8 bg-black/30 backdrop-blur-[3px] rounded-3xl shadow-xl max-xl:max-h-100vh max-h-[90vh]">
+                        <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
+                            <p class="text-xl font-bold mb-4">Daftar Tugas</h2>
+                            <form id="todo-form" class="flex gap-2 mb-4">
+                                <input id="todo-input" type="text" placeholder="Tambah tugas..."
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <button type="submit"
+                                    class="p-2 w-fit font-medium rounded-lg bg-white/20 hover:bg-white/20 transition-all">Tambah</button>
+                            </form>
+                            <ul id="todo-list"
+                                class="space-y-2 block overflow-y-auto max-xl:min-h-[300px]  xl:max-h-[70vh] pr-1"></ul>
+                        </div>
+                    </section>
                 </div>
 
-            </div>
 
+            </div>
         </section>
-        
-
-
-        <!-- Notes Table -->
-        <section class="w-full bg-white py-10 px-4 sm:px-8">
-            <div class="max-w-5xl mx-auto p-6 px-8 sm:p-8 sm:px-10 bg-[var(--ungu)] text-white rounded-2xl shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-2xl font-bold flex items-center gap-2">
-                        <!-- Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" width="24" height="24">
-                        <path d="M8.5 1.5A1.5 1.5 0 0 1 10 3v1h3.5A1.5 1.5 0 0 1 15 5.5v8A1.5 1.5 0 0 1 13.5 15h-11A1.5 1.5 0 0 1 1 13.5v-11A1.5 1.5 0 0 1 2.5 1H8a.5.5 0 0 1 .5.5zm.5 2.5V3a.5.5 0 0 0-.5-.5H2.5a.5.5 0 0 0-.5.5v10.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V5.5A.5.5 0 0 0 13.5 5H9a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                        Catatan Pomodoro
-                    </h2>
-                    <button id="add-note-btn"
-                        class="px-4 py-2 bg-[var(--oren)] text-white font-semibold rounded-lg shadow-md hover:bg-[#d6411f] transition">
-                        Tambah Catatan
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full rounded-xl overflow-hidden shadow-lg bg-white text-gray-800">
-                        <thead class="bg-[var(--ungu-pastel)] text-[var(--ungu)]">
-                            <tr>
-                                <th class="px-6 py-3 text-left font-semibold">Tanggal & Waktu</th>
-                                <th class="px-6 py-3 text-left font-semibold">Catatan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="notes-table-body" class="text-gray-800">
-                            <!-- akan diisi otomatis -->
-                        </tbody>
-                    </table>
-                </div>
+        <section class="mx-8 max-w-5xl mx-auto">
+            <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
+                <div class="flex items-center justify-between mb-4"></div>
+                <h2 class="text-xl font-bold">Catatan Pomodoro</h2>
+                <button id="add-note-btn"
+                    class="p-2 font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-all">
+                    Tambah Catatan
+                </button>
             </div>
-        </section>   
+            <div class="overflow-x-auto">
+                <table class="min-w-full rounded-2xl overflow-hidden bg-black/30 backdrop-blur-[3px] shadow-xl">
+                    <thead>
+                        <tr class="bg-white/10 text-white/80">
+                            <th class="px-6 py-3 text-left font-semibold">Tanggal & Waktu</th>
+                            <th class="px-6 py-3 text-left font-semibold">Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notes-table-body">
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </section>
     </main>
-
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const HISTORY_KEY = 'pomodoro_history';
@@ -410,20 +358,18 @@
             const saveNotesBtn = document.getElementById('save-notes-btn');
             const cancelNotesBtn = document.getElementById('cancel-notes-btn');
 
-            
             function renderNotesTable() {
-            notesTableBody.innerHTML = '';
-            pomodoroHistory.slice().reverse().forEach(note => {
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-gray-200 hover:bg-gray-100 transition-colors';
-                tr.innerHTML = `
-                    <td class="px-6 py-3 whitespace-nowrap text-gray-800">${new Date(note.timestamp).toLocaleString('id-ID')}</td>
-                    <td class="px-6 py-3 text-gray-700">${note.note ? note.note.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '-'}</td>
-                `;
-                notesTableBody.appendChild(tr);
-            });
-        }
-
+                notesTableBody.innerHTML = '';
+                pomodoroHistory.slice().reverse().forEach(note => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-white/10 hover:bg-white/5 transition-colors';
+                    tr.innerHTML = `
+                <td class="px-6 py-3 whitespace-nowrap text-white/90">${new Date(note.timestamp).toLocaleString('id-ID')}</td>
+                <td class="px-6 py-3 text-white/80">${note.note ? note.note.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '-'}</td>
+            `;
+                    notesTableBody.appendChild(tr);
+                });
+            }
 
             addNoteBtn.addEventListener('click', function () {
                 notesInput.value = '';
@@ -491,27 +437,19 @@
 
             function renderTodos() {
                 todoList.innerHTML = '';
-                const placeholder = document.getElementById('todo-empty-placeholder');
-                if (todos.length === 0) {
-                    if (placeholder) placeholder.classList.remove('hidden');
-                } else {
-                    if (placeholder) placeholder.classList.add('hidden');
-
-                    todos.forEach((todo) => {
-                        const li = document.createElement('li');
-                        li.className = 'flex items-center justify-between bg-white/10 rounded-lg px-3 py-2';
-                        li.innerHTML = `
-                            <label class="flex items-center gap-2 cursor-pointer w-full">
-                                <input type="checkbox" ${todo.done ? 'checked' : ''} data-id="${todo.id}" class="accent-blue-500">
-                                <span class="${todo.done ? 'line-through text-white/50' : ''}">${todo.text}</span>
-                            </label>
-                            <button data-del="${todo.id}" class="text-white/50 hover:text-red-500 px-2">&times;</button>
-                        `;
-                        todoList.appendChild(li);
-                    });
-                }
+                todos.forEach((todo) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-white/10 rounded-lg px-3 py-2';
+                    li.innerHTML = `
+                <label class="flex items-center gap-2 cursor-pointer w-full">
+                <input type="checkbox" ${todo.done ? 'checked' : ''} data-id="${todo.id}" class="accent-blue-500">
+                <span class="${todo.done ? 'line-through text-white/50' : ''}">${todo.text}</span>
+                </label>
+                <button data-del="${todo.id}" class="text-white/50 hover:text-red-500 px-2">&times;</button>
+                `;
+                    todoList.appendChild(li);
+                });
             }
-
 
             todoForm.onsubmit = function (e) {
                 e.preventDefault();
@@ -706,45 +644,44 @@
                 updateTimerDisplay();
             }
 
-           function updateUIForMode() {
+            function updateUIForMode() {
                 [pomodoroBtn, shortBreakBtn, longBreakBtn].forEach(btn => {
-                    btn.classList.remove('active', 'btn-pomodoro', 'btn-short', 'btn-long');
+                    btn.classList.remove('active', 'bg-red-500', 'bg-blue-500', 'bg-green-500', 'text-white');
                 });
 
                 gifVideo.pause();
-                startPauseBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
-                    </svg>`;
+
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+            </svg>`;
 
                 let bgColor, activeBtn, activeBtnColor, startBtnColor;
 
                 if (currentMode === 'pomodoro') {
-                    gifVideo.setAttribute('src', './public/assets/videos/logoTimerGerak2.webm');
-                    bgColor = 'bg-[#fff5f0]';
+                    gifVideo.setAttribute('src', './public/assets/videos/oiiaoiia.webm')
+                    bgColor = 'bg-gray-900';
                     activeBtn = pomodoroBtn;
-                    activeBtnColor = 'btn-pomodoro';
-                    startBtnColor = 'bg-white text-[var(--oren)]';
+                    activeBtnColor = 'bg-red-500';
+                    startBtnColor = 'bg-white text-red-500';
                 } else if (currentMode === 'shortBreak') {
-                    gifVideo.setAttribute('src', './public/assets/videos/logoTimerGerak2.webm');
-                    bgColor = 'bg-[#f5f2ff]';
+                    gifVideo.setAttribute('src', './public/assets/videos/crunch.webm')
+                    bgColor = 'bg-blue-900';
                     activeBtn = shortBreakBtn;
-                    activeBtnColor = 'btn-pomodoro';
-                    startBtnColor = 'bg-white text-[var(--oren)]';
+                    activeBtnColor = 'bg-blue-500';
+                    startBtnColor = 'bg-white text-blue-500';
                 } else {
-                    gifVideo.setAttribute('src', './public/assets/videos/logoTimerGerak2.webm');
-                    bgColor = 'bg-[var(--ungu-pastel)]';
+                    gifVideo.setAttribute('src', './public/assets/videos/mimir.webm')
+                    bgColor = 'bg-green-900';
                     activeBtn = longBreakBtn;
-                    activeBtnColor = 'btn-pomodoro';
-                    startBtnColor = 'bg-white text-[var(--oren)]';
+                    activeBtnColor = 'bg-green-500';
+                    startBtnColor = 'bg-white text-green-500';
                 }
 
                 appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 ${bgColor}`;
-                activeBtn.classList.add('active', activeBtnColor);
-                startPauseBtn.className = `p-2 font-bold rounded-lg transition-all ${startBtnColor}`;
-
+                activeBtn.classList.add('active', 'text-white', activeBtnColor);
+                startPauseBtn.className = `p-2 font-bold rounded-lg transition-all bg-white ${startBtnColor}`;
             }
-
 
             function handleTimerCompletion() {
                 playNotificationSound();

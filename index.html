@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FocusU - Halaman Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusU - Halaman Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-  <!-- SwiperJS CDN -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- SwiperJS CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-  
 
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      scroll-behavior: smooth;
-    }
-    :root {
-      --ungu: #5a39a7;
-      --oren: #f35026;
-      --oren-pastel: #fee5df;
-      --ungu-pastel: #cfd5fc;
-    }
-  </style>
-  
+
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        scroll-behavior: smooth;
+      }
+      :root {
+        --ungu: #5a39a7;
+        --oren: #f35026;
+        --oren-pastel: #fee5df;
+        --ungu-pastel: #cfd5fc;
+      }
+    </style>
+
 </head>
 
 <body class="bg-[#fefefe] text-gray-800">
 
   <!-- Header / Hero Section -->
-
   <section class="pt-28 pb-8 min-h-screen flex flex-col justify-center items-center text-center px-4 bg-gradient-to-b from-[#cfd5fc] to-white" data-aos="fade-up">
     <div class="flex items-center space-x-2 mb-4">
       <img src="public/assets/images/logoFocuUBaruu.png" alt="Logo FocusU" class="w-24 h-24 mr-2">
@@ -54,14 +53,12 @@
   </section>
 
 
-
-
   <!-- Fitur FocusU -->
   <section class="py-20 px-4 bg-white" data-aos="fade-up" id="fitur" >
     <div class="max-w-4xl mx-auto text-center">
       <h3 class="text-3xl font-bold text-[#5a39a7] mb-6">Fitur FocusU</h3>
       <p class="mb-10 text-gray-600">FocusU menyediakan berbagai fitur yang mendukung pengalaman belajar yang terstruktur dan menyenangkan:</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="bg-[#fee5df] p-6 rounded-lg shadow-sm">
           <img src="public/assets/images/alarmClock.png" alt="Pomodoro Timer" class="w-10 h-10 mx-auto mb-3">
           <h4 class="font-semibold text-lg mb-2 text-[#f35026]">Pomodoro Timer</h4>
@@ -77,16 +74,41 @@
           <h4 class="font-semibold text-lg mb-2 text-[#f35026]">Catatan Belajar</h4>
           <p class="text-sm">Tulis apa yang telah kamu pelajari setelah sesi Pomodoro selesai.</p>
         </div>
-        <div class="bg-[#cfd5fc] p-6 rounded-lg shadow-sm">
+        <!-- <div class="bg-[#cfd5fc] p-6 rounded-lg shadow-sm">
           <img src="public/assets/images/spotify.png" alt="Musik Fokus" class="w-10 h-10 mx-auto mb-3">
           <h4 class="font-semibold text-lg mb-2 text-[#5a39a7]">Musik Fokus</h4>
           <p class="text-sm">Dengarkan musik fokus dari Spotify saat kamu belajar.</p>
-        </div>
+        </div> -->
       </div>
     </div>
   </section>
 
-    <!-- Cara Menggunakan + Testimoni Slider -->
+  <!-- Video Aapa itu Teknik Pomodoro -->
+  <section class="max-w-5xl mx-auto px-6 py-10 text-center">
+    <h2 class="text-3xl font-bold text-[var(--ungu)] mb-4">
+      Apa Itu Teknik Pomodoro?
+    </h2>
+    <p class="text-gray-700 text-base sm:text-lg mb-6">
+      Teknik Pomodoro membantu kamu lebih fokus dan produktif dengan cara membagi waktu kerja ke dalam interval fokus dan istirahat. Yuk tonton videonya agar lebih paham!
+    </p>
+
+    <div class="relative pb-[56.25%] h-0 overflow-hidden rounded-xl shadow-xl">
+      <iframe class="absolute top-0 left-0 w-full h-full"
+          src="https://www.youtube.com/embed/MrlAAGyAwog"
+          title="Penjelasan Teknik Pomodoro"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+      </iframe>
+
+    </div>
+  </section>
+
+
+
+
+
+  <!-- Cara Menggunakan + Testimoni Slider -->
   <section class="py-20 px-6 bg-[#fefefe]" data-aos="fade-up">
     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
@@ -169,15 +191,15 @@
 
   <!-- Footer -->
   <footer class="bg-[#5a39a7] text-white text-center py-6">
-      <p class="mb-2">&copy; 2025 FocusU. All rights reserved.</p>
-      <a href="tentang.html" class="underline hover:text-[#fee5df]">Tentang Aplikasi</a>
+    <p class="mb-2">&copy; 2025 FocusU. All rights reserved.</p>
+    <a href="tentang.html" class="underline hover:text-[#fee5df]">Tentang Aplikasi</a>
   </footer>
 
 
   <script>
     // AOS.js
     AOS.init({ duration: 800, once: false });
-    
+
 
     // Swiper init
     const swiper = new Swiper('.mySwiper', {
@@ -188,7 +210,7 @@
       el: '.swiper-pagination',
       clickable: true,
     },
-   
+
     breakpoints: {
       768: { slidesPerView: 1 },
     }

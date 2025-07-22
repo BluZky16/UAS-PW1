@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="id" class="overflow-x-hidden">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+
+    <style>
+        /* Container utama untuk pengaturan */
+        .mt-3.text-center.sm\:mt-0.sm\:ml-4.sm\:text-left.w-full {
+            background-color: #f0f4f8; /* soft gray untuk latar */
+            padding: 1.25rem; /* padding agar tidak mepet */
+            border-radius: 12px; /* sudut membulat */
+            box-shadow: 0 4px 10px rgba(160,180,235,0.15); /* shadow lembut */
+        }
+
+        /* Judul pengaturan */
+        #settings-title {
+            color: #2c3e8f; /* warna biru yang agak lebih gelap */
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Container form field */
+        .mt-4.space-y-4 > div {
+            margin-bottom: 0.6rem;
+        }
+
+        /* Label form */
+        .mt-4.space-y-4 label {
+            color: #506484; /* abu-abu soft blue */
+            font-weight: 500;
+        }
+
+        /* Input form */
+        .mt-4.space-y-4 input[type="number"] {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1.5px solid #a8c0ff; /* pastel blue border */
+            border-radius: 8px; /* membulat */
+            background-color: #e8efff; /* sangat soft pastel blue */
+            color: #3a3f55; /* teks abu abu gelap */
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: none;
+            outline: none;
+        }
+
+        /* Fokus pada input */
+        .mt-4.space-y-4 input[type="number"]:focus {
+            border-color: #5a7de8; /* biru medium saat focus */
+            background-color: #d4dbff; /* sedikit terang saat fokus */
+            box-shadow: 0 0 8px rgba(90,125,232,0.35);
+        }
+
+        /* Placeholder (jika ada) */
+        .mt-4.space-y-4 input[type="number"]::placeholder {
+            color: #8593b2;
+        }
+
+        /* Hilangkan ring biru default Tailwind saat focus (jika ada) */
+        .mt-4.space-y-4 input[type="number"]:focus-visible {
+            outline: none;
+        }
+        /* Custom styles using Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            /* Disable tap highlight on mobile */
+        }
+
+        /* Style for the active mode button */
+        .btn-mode.active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Width */
+        /* Custom Scrollbar Styles - Global */
+        ::-webkit-scrollbar {
+            width: 8px;
+            border-radius: 10px;
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: oklch(55.2% 0.016 285.938);
+            border-radius: 8px;
+            height: 1rem;
+            margin-left: 6px;
+            margin-right: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: oklch(55.2% 0.016 285.938);
+        }
+    </style>
+</head>
+
+<body id="app-body" class="overflow-x-hidden">
+    <audio id="notification-sound" src="./public/assets/sounds/notif-sound.mp3" preload="auto" loop></audio>
+
+    <div id="alarm-modal" class="fixed inset-0 flex items-center justify-center pointer-events-none opacity-0 z-50 transition-all duration-300">
+        <div aria-hidden="true" class="fixed inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+        <div class="transform bg-white text-black p-6 rounded-2xl shadow-xl transition-all duration-300 opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 max-w-sm w-full text-center">
+            <p class="text-lg font-bold mb-4">Waktu selesai!</p>
+            <button id="stop-alarm-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-all">Stop Alarm</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title"
+        class="relative z-10 pointer-events-none opacity-0">
+        <div aria-hidden="true" class="fixed inset-0 bg-black/75 transition-opacity opacity-0"></div>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div
+                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+
+                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                <h3 id="settings-title" class="text-base font-semibold text-gray-900">
+                                    Pengaturan Pomodoro</h3>
+                                <div class="mt-4 space-y-4">
+                                    <div>
+                                        <label for="pomodoro-input"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            Waktu Pomodoro (menit)
+                                        </label>
+                                        <input type="number" id="pomodoro-input" min="1" max="60" value="25"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label for="short-break-input"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            Istirahat Pendek (menit)
+                                        </label>
+                                        <input type="number" id="short-break-input" min="1" max="30" value="5"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label for="long-break-input"
+                                            class="block text-sm font-medium text-gray-700 mb-1">
+                                            Istirahat Panjang (menit)
+                                        </label>
+                                        <input type="number" id="long-break-input" min="1" max="60" value="15"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label for="cycles-input" class="block text-sm font-medium text-gray-700 mb-1">
+                                            Siklus Sebelum Istirahat Panjang
+                                        </label>
+                                        <input type="number" id="cycles-input" min="1" max="10" value="4"
+                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" id="save-settings-btn"
+                            class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 sm:ml-3 sm:w-auto">Simpan</button>
+                        <button type="button" id="cancel-settings-btn"
+                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notes Modal -->
+    <div id="notes-modal" role="dialog" aria-modal="true" aria-labelledby="notes-title"
+        class="relative z-10 pointer-events-none opacity-0">
+        <div aria-hidden="true" class="fixed inset-0 bg-black/75 transition-opacity opacity-0"></div>
+
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div
+                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <h3 id="notes-title" class="text-base font-semibold text-gray-900 mb-4">
+                            Catatan Setelah Selesai Pomodoro
+                        </h3>
+                        <textarea id="notes-input" rows="4"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Tulis catatan atau refleksi tentang sesi ini..."></textarea>
+                    </div>
+                    <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" id="save-notes-btn"
+                            class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 sm:ml-3 sm:w-auto">Simpan</button>
+                        <button type="button" id="cancel-notes-btn"
+                            class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Batal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div id="bg-wrapper" class="fixed inset-0 -z-10 overflow-hidden">
+        <img id="bg-image" src="./public/assets/images/bg.jpg"
+            class="w-full h-full object-cover transition-all duration-500" alt="Background Image">
+    </div> -->
+    <main>
+        <section
+            class="flex items-center justify-center min-h-screen w-screen transition-colors duration-500 relative py-5">
+            <img id="bg-image" src="./public/assets/images/bg.jpg"
+                class="absolute inset-0 w-full h-full object-cover -z-10" alt="Background Image">
+            <div>
+                <div
+                    class="w-full lg:max-w-md mx-auto bg-black/30 backdrop-blur-[3px] rounded-3xl shadow-xl flex justify-between mb-7 p-2 px-4 text-white items-center ">
+                    <h1 class="text-xl font-bold ">FocusU</h1>
+                    <div class="flex gap-3 justify-center">
+                        <button id="settings-btn"
+                            class="p-2 w-fit font-semibold rounded-lg bg-white/20 hover:bg-white/20 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="xl:flex">
+                    <div
+                        class="w-full lg:max-w-md lg:mx-8 bg-black/30 backdrop-blur-[3px] rounded-3xl shadow-xl xl:max-h-[90vh] max-xl:mb-5">
+                        <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
+
+                            <!-- Mode Selection Buttons -->
+                            <div class="flex justify-center space-x-2 sm:space-x-4 mb-8">
+                                <button id="pomodoro-btn"
+                                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Pomodoro</button>
+                                <button id="short-break-btn"
+                                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat
+                                    Pendek</button>
+                                <button id="long-break-btn"
+                                    class="btn-mode px-4 py-2 rounded-full font-semibold transition-all duration-300">Istirahat
+                                    Panjang</button>
+                            </div>
+
+                            <div class="flex justify-center">
+                                <video class="aspect-square w-28 h-28" loop muted playsinline id="gif">
+                                    <source src="./public/assets/videos/oiiaoiia.webm" type="video/webm">
+                                    Your browser does not support transparent WebM video.
+                                </video>
+                            </div>
+                            <!-- Timer Display -->
+                            <div class="text-center my-8">
+                                <h1 id="timer-display" class="text-7xl sm:text-8xl md:text-9xl font-black">25:00</h1>
+                            </div>
+
+                            <!-- Control Buttons -->
+                            <div class="flex justify-center gap-4">
+                                <button id="start-pause-btn" class="p-2 font-bold rounded-lg transition-all w-fit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                        class="bi bi-play-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
+                                    </svg>
+                                </button>
+                                <button id="reset-btn"
+                                    class="p-2 w-fit  font-semibold rounded-lg bg-white/20 hover:bg-white/20 transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                        class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
+                                        <path
+                                            d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466" />
+                                    </svg>
+                                </button>
+
+                            </div>
+
+                            <!-- Cycle Counter -->
+                            <div class="text-center mt-8">
+                                <p class="text-sm text-white/50">Sesi Selesai: <span id="cycle-count">0</span>/<span
+                                        id="cycles-target">4</span></p>
+                            </div>
+                        </div>
+                        <footer class="text-center mt-4 text-white/40 text-sm pb-4">
+                            Dibuat dengan ❤️ oleh FocusU
+                        </footer>
+                    </div>
+                    <section
+                        class="w-full lg:max-w-md lg:mx-8 bg-black/30 backdrop-blur-[3px] rounded-3xl shadow-xl max-xl:max-h-100vh max-h-[90vh]">
+                        <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
+                            <p class="text-xl font-bold mb-4">Daftar Tugas</h2>
+                            <form id="todo-form" class="flex gap-2 mb-4">
+                                <input id="todo-input" type="text" placeholder="Tambah tugas..."
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <button type="submit"
+                                    class="p-2 w-fit font-medium rounded-lg bg-white/20 hover:bg-white/20 transition-all">Tambah</button>
+                            </form>
+                            <ul id="todo-list"
+                                class="space-y-2 block overflow-y-auto max-xl:min-h-[300px]  xl:max-h-[70vh] pr-1"></ul>
+                        </div>
+                    </section>
+                </div>
+
+
+            </div>
+        </section>
+        <section class="mx-8 max-w-5xl mx-auto">
+            <div class="p-6 px-8 sm:p-8 sm:px-10 text-white">
+                <div class="flex items-center justify-between mb-4"></div>
+                <h2 class="text-xl font-bold">Catatan Pomodoro</h2>
+                <button id="add-note-btn"
+                    class="p-2 font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-all">
+                    Tambah Catatan
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full rounded-2xl overflow-hidden bg-black/30 backdrop-blur-[3px] shadow-xl">
+                    <thead>
+                        <tr class="bg-white/10 text-white/80">
+                            <th class="px-6 py-3 text-left font-semibold">Tanggal & Waktu</th>
+                            <th class="px-6 py-3 text-left font-semibold">Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="notes-table-body">
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const HISTORY_KEY = 'pomodoro_history';
+            let pomodoroHistory = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+
+            const notesTableBody = document.getElementById('notes-table-body');
+            const addNoteBtn = document.getElementById('add-note-btn');
+            const notesModal = document.getElementById('notes-modal');
+            const notesBackdrop = notesModal.querySelector('[aria-hidden]');
+            const notesPanel = notesModal.querySelector('.transform');
+            const notesInput = document.getElementById('notes-input');
+            const saveNotesBtn = document.getElementById('save-notes-btn');
+            const cancelNotesBtn = document.getElementById('cancel-notes-btn');
+
+            function renderNotesTable() {
+                notesTableBody.innerHTML = '';
+                pomodoroHistory.slice().reverse().forEach(note => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-white/10 hover:bg-white/5 transition-colors';
+                    tr.innerHTML = `
+                <td class="px-6 py-3 whitespace-nowrap text-white/90">${new Date(note.timestamp).toLocaleString('id-ID')}</td>
+                <td class="px-6 py-3 text-white/80">${note.note ? note.note.replace(/</g, "&lt;").replace(/>/g, "&gt;") : '-'}</td>
+            `;
+                    notesTableBody.appendChild(tr);
+                });
+            }
+
+            addNoteBtn.addEventListener('click', function () {
+                notesInput.value = '';
+                notesModal.classList.remove('pointer-events-none', 'opacity-0');
+                notesBackdrop.classList.remove('opacity-0');
+                notesPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                notesModal.dataset.manual = "true";
+            });
+
+            saveNotesBtn.addEventListener('click', function () {
+                const note = notesInput.value.trim();
+                let mode = 'manual-note';
+                if (notesModal.dataset.manual !== "true") {
+                    mode = 'pomodoro-cycle-complete';
+                }
+                pomodoroHistory.push({
+                    timestamp: new Date().toISOString(),
+                    mode: mode,
+                    note: note
+                });
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(pomodoroHistory));
+                renderNotesTable();
+                notesModal.classList.add('pointer-events-none', 'opacity-0');
+                notesBackdrop.classList.add('opacity-0');
+                notesPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                notesModal.dataset.manual = "";
+            });
+
+            cancelNotesBtn.addEventListener('click', function () {
+                if (notesModal.dataset.manual === "true") {
+                    notesModal.classList.add('pointer-events-none', 'opacity-0');
+                    notesBackdrop.classList.add('opacity-0');
+                    notesPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                    notesModal.dataset.manual = "";
+                }
+            });
+
+
+            notesBackdrop.addEventListener('click', function () {
+                if (notesModal.dataset.manual === "true") {
+                    notesModal.classList.add('pointer-events-none', 'opacity-0');
+                    notesBackdrop.classList.add('opacity-0');
+                    notesPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                    notesModal.dataset.manual = "";
+                }
+            });
+
+            renderNotesTable();
+            window.renderNotesTable = renderNotesTable;
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const todoForm = document.getElementById('todo-form');
+            const todoInput = document.getElementById('todo-input');
+            const todoList = document.getElementById('todo-list');
+            const STORAGE_KEY = 'pomodoro_todos';
+            let todos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+            function saveTodos() {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+            }
+
+            function renderTodos() {
+                todoList.innerHTML = '';
+                todos.forEach((todo) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-white/10 rounded-lg px-3 py-2';
+                    li.innerHTML = `
+                <label class="flex items-center gap-2 cursor-pointer w-full">
+                <input type="checkbox" ${todo.done ? 'checked' : ''} data-id="${todo.id}" class="accent-blue-500">
+                <span class="${todo.done ? 'line-through text-white/50' : ''}">${todo.text}</span>
+                </label>
+                <button data-del="${todo.id}" class="text-white/50 hover:text-red-500 px-2">&times;</button>
+                `;
+                    todoList.appendChild(li);
+                });
+            }
+
+            todoForm.onsubmit = function (e) {
+                e.preventDefault();
+                const text = todoInput.value.trim();
+                if (text) {
+                    todos.unshift({ id: Date.now(), text, done: false });
+                    todoInput.value = '';
+                    saveTodos();
+                    renderTodos();
+                }
+            };
+
+            todoList.onclick = function (e) {
+                if (e.target.matches('input[type="checkbox"]')) {
+                    const id = Number(e.target.dataset.id);
+                    const todo = todos.find(t => t.id === id);
+                    if (todo) {
+                        todo.done = e.target.checked;
+                        saveTodos();
+                        renderTodos();
+                    }
+                }
+                if (e.target.matches('button[data-del]')) {
+                    const id = Number(e.target.dataset.del);
+                    todos = todos.filter(t => t.id !== id);
+                    saveTodos();
+                    renderTodos();
+                }
+            };
+
+            renderTodos();
+
+            // --- Settings ---
+            let settings = {
+                pomodoroTime: 25,
+                shortBreakTime: 5,
+                longBreakTime: 15,
+                cyclesBeforeLongBreak: 4,
+            };
+
+            // DOM ELEMENT
+            const timerDisplay = document.getElementById('timer-display');
+            const startPauseBtn = document.getElementById('start-pause-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const settingsBtn = document.getElementById('settings-btn');
+            const pomodoroBtn = document.getElementById('pomodoro-btn');
+            const shortBreakBtn = document.getElementById('short-break-btn');
+            const longBreakBtn = document.getElementById('long-break-btn');
+            const cycleCountDisplay = document.getElementById('cycle-count');
+            const cyclesTargetDisplay = document.getElementById('cycles-target');
+            const appBody = document.getElementById('app-body');
+            const gifVideo = document.getElementById('gif');
+
+            const notesModal = document.getElementById('notes-modal');
+            const notesBackdrop = notesModal.querySelector('[aria-hidden]');
+            const notesPanel = notesModal.querySelector('.transform');
+            const notesInput = document.getElementById('notes-input');
+            const saveNotesBtn = document.getElementById('save-notes-btn');
+            const cancelNotesBtn = document.getElementById('cancel-notes-btn');
+
+
+            // Settings modal elements
+            const settingsModal = document.getElementById('settings-modal');
+            const settingsBackdrop = settingsModal.querySelector('[aria-hidden]');
+            const settingsPanel = settingsModal.querySelector('.transform');
+            const pomodoroInput = document.getElementById('pomodoro-input');
+            const shortBreakInput = document.getElementById('short-break-input');
+            const longBreakInput = document.getElementById('long-break-input');
+            const cyclesInput = document.getElementById('cycles-input');
+            const saveSettingsBtn = document.getElementById('save-settings-btn');
+            const cancelSettingsBtn = document.getElementById('cancel-settings-btn');
+
+            // --- State Variables ---
+            let timerId = null;
+            let timeLeft = settings.pomodoroTime * 60;
+            let currentMode = 'pomodoro';
+            let isPaused = true;
+            let cyclesCompleted = 0;
+
+
+            function playNotificationSound() {
+                const sound = document.getElementById('notification-sound');
+                sound.currentTime = 0;
+                sound.play();
+
+                // Tampilkan konfirmasi setelah 1 detik (biar sound sempat mulai)
+                setTimeout(() => {
+                    const stop = confirm('Waktu selesai! Klik OK untuk menghentikan alarm.');
+                    if (stop) {
+                        sound.pause();
+                        sound.currentTime = 0;
+                    }
+                }, 1000);
+            }
+
+
+            // --- Settings Modal Functions ---
+            function openSettingsModal() {
+                // Load current settings into inputs
+                pomodoroInput.value = settings.pomodoroTime;
+                shortBreakInput.value = settings.shortBreakTime;
+                longBreakInput.value = settings.longBreakTime;
+                cyclesInput.value = settings.cyclesBeforeLongBreak;
+
+                settingsModal.classList.remove('pointer-events-none', 'opacity-0');
+                settingsBackdrop.classList.remove('opacity-0');
+                settingsPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            function closeSettingsModal() {
+                settingsModal.classList.add('pointer-events-none', 'opacity-0');
+                settingsBackdrop.classList.add('opacity-0');
+                settingsPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            function saveSettings() {
+                const newSettings = {
+                    pomodoroTime: parseInt(pomodoroInput.value),
+                    shortBreakTime: parseInt(shortBreakInput.value),
+                    longBreakTime: parseInt(longBreakInput.value),
+                    cyclesBeforeLongBreak: parseInt(cyclesInput.value)
+                };
+
+                // Validate settings
+                if (newSettings.pomodoroTime < 1 || newSettings.pomodoroTime > 60 ||
+                    newSettings.shortBreakTime < 1 || newSettings.shortBreakTime > 30 ||
+                    newSettings.longBreakTime < 1 || newSettings.longBreakTime > 60 ||
+                    newSettings.cyclesBeforeLongBreak < 1 || newSettings.cyclesBeforeLongBreak > 10) {
+                    alert('Harap masukkan nilai yang valid!');
+                    return;
+                }
+
+                settings = newSettings;
+                cyclesTargetDisplay.textContent = settings.cyclesBeforeLongBreak;
+
+                // Save settings to localStorage
+                localStorage.setItem('pomodoro_settings', JSON.stringify(settings));
+
+                // Reset timer with new settings
+                switchMode(currentMode);
+                closeSettingsModal();
+            }
+
+            // Load settings from localStorage if available
+            const savedSettings = localStorage.getItem('pomodoro_settings');
+            if (savedSettings) {
+                settings = JSON.parse(savedSettings);
+            }
+
+            const HISTORY_KEY = 'pomodoro_history';
+            let pomodoroHistory = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+
+            function savePomodoroSession(mode, note = "") {
+                pomodoroHistory.push({
+                    timestamp: new Date().toISOString(),
+                    mode: mode,
+                    note: note
+                });
+                localStorage.setItem(HISTORY_KEY, JSON.stringify(pomodoroHistory));
+            }
+
+
+            // --- Core Functions ---
+            function updateTimerDisplay() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                timerDisplay.textContent = formattedTime;
+                document.title = `${formattedTime} - ${currentMode.charAt(0).toUpperCase() + currentMode.slice(1)} Timer`;
+            }
+
+            function switchMode(mode) {
+                currentMode = mode;
+                isPaused = true;
+                clearInterval(timerId);
+                timerId = null;
+
+                switch (mode) {
+                    case 'pomodoro':
+                        timeLeft = settings.pomodoroTime * 60;
+                        break;
+                    case 'shortBreak':
+                        timeLeft = settings.shortBreakTime * 60;
+                        break;
+                    case 'longBreak':
+                        timeLeft = settings.longBreakTime * 60;
+                        break;
+                }
+
+                updateUIForMode();
+                updateTimerDisplay();
+            }
+
+            function updateUIForMode() {
+                [pomodoroBtn, shortBreakBtn, longBreakBtn].forEach(btn => {
+                    btn.classList.remove('active', 'bg-red-500', 'bg-blue-500', 'bg-green-500', 'text-white');
+                });
+
+                gifVideo.pause();
+
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+            </svg>`;
+
+                let bgColor, activeBtn, activeBtnColor, startBtnColor;
+
+                if (currentMode === 'pomodoro') {
+                    gifVideo.setAttribute('src', './public/assets/videos/oiiaoiia.webm')
+                    bgColor = 'bg-gray-900';
+                    activeBtn = pomodoroBtn;
+                    activeBtnColor = 'bg-red-500';
+                    startBtnColor = 'bg-white text-red-500';
+                } else if (currentMode === 'shortBreak') {
+                    gifVideo.setAttribute('src', './public/assets/videos/crunch.webm')
+                    bgColor = 'bg-blue-900';
+                    activeBtn = shortBreakBtn;
+                    activeBtnColor = 'bg-blue-500';
+                    startBtnColor = 'bg-white text-blue-500';
+                } else {
+                    gifVideo.setAttribute('src', './public/assets/videos/mimir.webm')
+                    bgColor = 'bg-green-900';
+                    activeBtn = longBreakBtn;
+                    activeBtnColor = 'bg-green-500';
+                    startBtnColor = 'bg-white text-green-500';
+                }
+
+                appBody.className = `flex items-center justify-center min-h-screen transition-colors duration-500 ${bgColor}`;
+                activeBtn.classList.add('active', 'text-white', activeBtnColor);
+                startPauseBtn.className = `p-2 font-bold rounded-lg transition-all bg-white ${startBtnColor}`;
+            }
+
+            function handleTimerCompletion() {
+                playNotificationSound();
+
+                savePomodoroSession(currentMode);
+
+                if (currentMode === 'pomodoro') {
+                    console.log('test');
+                    cyclesCompleted++;
+                    cycleCountDisplay.textContent = `${cyclesCompleted % settings.cyclesBeforeLongBreak}`;
+
+                    if (cyclesCompleted > 0 && cyclesCompleted % settings.cyclesBeforeLongBreak === 0) {
+                        openNotesModal(); // Tampilkan modal catatan
+                        return; // Tunggu user isi catatan sebelum lanjut
+                    }
+
+                    switchMode('shortBreak');
+                } else {
+                    switchMode('pomodoro');
+                }
+            }
+
+
+            function startTimer() {
+                if (timerId !== null) return;
+
+                isPaused = false;
+                gifVideo.play();
+
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                    <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"/>
+                    </svg>`;
+
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+
+                    if (timeLeft < 0) {
+                        clearInterval(timerId);
+                        timerId = null;
+                        handleTimerCompletion();
+                    }
+                }, 1000);
+            }
+
+            function pauseTimer() {
+                isPaused = true;
+                gifVideo.pause();
+
+                startPauseBtn.innerHTML =
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+            </svg>`;
+                clearInterval(timerId);
+                timerId = null;
+            }
+
+            function resetTimer() {
+                switchMode(currentMode);
+            }
+
+            // --- Event Listeners ---
+            startPauseBtn.addEventListener('click', () => {
+                if (isPaused) {
+                    startTimer();
+                } else {
+                    pauseTimer();
+                }
+            });
+
+            resetBtn.addEventListener('click', resetTimer);
+            settingsBtn.addEventListener('click', openSettingsModal);
+
+            pomodoroBtn.addEventListener('click', () => switchMode('pomodoro'));
+            shortBreakBtn.addEventListener('click', () => switchMode('shortBreak'));
+            longBreakBtn.addEventListener('click', () => switchMode('longBreak'));
+
+            // Settings modal event listeners
+            saveSettingsBtn.addEventListener('click', saveSettings);
+            cancelSettingsBtn.addEventListener('click', closeSettingsModal);
+            settingsBackdrop.addEventListener('click', closeSettingsModal);
+
+            // --- Initial Setup ---
+            window.addEventListener('load', () => {
+                cyclesTargetDisplay.textContent = settings.cyclesBeforeLongBreak;
+                switchMode('pomodoro');
+            });
+
+            function openNotesModal() {
+                notesInput.value = '';
+                notesModal.classList.remove('pointer-events-none', 'opacity-0');
+                notesBackdrop.classList.remove('opacity-0');
+                notesPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            function closeNotesModal() {
+                notesModal.classList.add('pointer-events-none', 'opacity-0');
+                notesBackdrop.classList.add('opacity-0');
+                notesPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+            }
+
+            saveNotesBtn.addEventListener('click', () => {
+                const note = notesInput.value.trim();
+                savePomodoroSession('pomodoro-cycle-complete', note);
+                closeNotesModal();
+                switchMode('longBreak');
+            });
+
+            cancelNotesBtn.addEventListener('click', () => {
+                savePomodoroSession('pomodoro-cycle-complete', '');
+                closeNotesModal();
+                switchMode('longBreak');
+            });
+
+            notesBackdrop.addEventListener('click', closeNotesModal);
+
+        });
+    </script>
+
+</body>
+
+</html>

@@ -586,14 +586,27 @@
                 sound.currentTime = 0;
                 sound.play();
 
-                // Tampilkan konfirmasi setelah 1 detik (biar sound sempat mulai)
-                setTimeout(() => {
-                    const stop = confirm('Waktu selesai! Klik OK untuk menghentikan alarm.');
-                    if (stop) {
-                        sound.pause();
-                        sound.currentTime = 0;
-                    }
-                }, 1000);
+                const alarmModal = document.getElementById('alarm-modal');
+                const alarmBackdrop = alarmModal.querySelector('[aria-hidden]');
+                const alarmPanel = alarmModal.querySelector('.transform');
+                const stopAlarmBtn = document.getElementById('stop-alarm-btn');
+
+                alarmModal.classList.remove('pointer-events-none', 'opacity-0');
+                alarmBackdrop.classList.remove('opacity-0');
+                alarmPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+
+                function stopAlarm() {
+                    sound.pause();
+                    sound.currentTime = 0;
+                    alarmModal.classList.add('pointer-events-none', 'opacity-0');
+                    alarmBackdrop.classList.add('opacity-0');
+                    alarmPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+                    stopAlarmBtn.removeEventListener('click', stopAlarm);
+                    alarmBackdrop.removeEventListener('click', stopAlarm);
+                }
+
+                stopAlarmBtn.addEventListener('click', stopAlarm);
+                alarmBackdrop.addEventListener('click', stopAlarm);
             }
 
 
@@ -750,7 +763,6 @@
                 savePomodoroSession(currentMode);
 
                 if (currentMode === 'pomodoro') {
-                    console.log('test');
                     cyclesCompleted++;
                     cycleCountDisplay.textContent = `${cyclesCompleted % settings.cyclesBeforeLongBreak}`;
 
